@@ -630,8 +630,24 @@ class LCASMainGUI(ctk.CTk):
                 widget.destroy()
 
         ui_plugins = self.core_app.get_ui_plugins()
+        
+        # Also check for multi-agent plugin specifically
+        multi_agent_plugin = self.core_app.plugin_manager.loaded_plugins.get("Multi-Agent Analysis")
+        if multi_agent_plugin and hasattr(multi_agent_plugin, 'create_ui_elements'):
+            if multi_agent_plugin not in ui_plugins:
+                ui_plugins.append(multi_agent_plugin)
+        
         if not ui_plugins:
             ctk.CTkLabel(plugins_ui_panel, text="No active UI plugins found.").pack(padx=10, pady=10)
+            
+            # Show plugin status for debugging
+            status_frame = ctk.CTkFrame(plugins_ui_panel)
+            status_frame.pack(fill="x", pady=5, padx=5)
+            ctk.CTkLabel(status_frame, text="Loaded Plugins:", font=ctk.CTkFont(weight="bold")).pack(anchor="w", padx=5)
+            
+            for plugin_name in self.core_app.plugin_manager.loaded_plugins.keys():
+                ctk.CTkLabel(status_frame, text=f"• {plugin_name}").pack(anchor="w", padx=20)
+            
             return
 
         for plugin in ui_plugins:

@@ -1,3 +1,4 @@
+
 """
 Multi-Agent Analysis Plugin
 Integrates the multi-agent system into the LCAS plugin architecture
@@ -8,12 +9,12 @@ import logging
 from typing import Dict, List, Any, Optional
 from pathlib import Path
 
-from lcas2.core import AnalysisPlugin, LCASCore
-from lcas2.agents import AgentCoordinator
+from lcas2.core.core import AnalysisPlugin, LCASCore, UIPlugin
+from lcas2.agents.agent_coordinator import AgentCoordinator
 
 logger = logging.getLogger(__name__)
 
-class MultiAgentAnalysisPlugin(AnalysisPlugin):
+class MultiAgentAnalysisPlugin(AnalysisPlugin, UIPlugin):
     """Plugin that orchestrates multi-agent analysis of legal documents"""
     
     def __init__(self):
@@ -52,7 +53,7 @@ class MultiAgentAnalysisPlugin(AnalysisPlugin):
                 "Enhanced AI Foundation",
                 "AI Integration Services"
             ]
-
+            
             for plugin_name in ai_plugin_names:
                 if plugin_name in core_app.plugin_manager.loaded_plugins:
                     ai_plugin = core_app.plugin_manager.loaded_plugins[plugin_name]
@@ -124,147 +125,133 @@ class MultiAgentAnalysisPlugin(AnalysisPlugin):
             config = data.get("config")
             
             if not processed_files:
-                logger.warning(f"{self.name}: No processed files provided for analysis")
                 return {
-                    "message": "No files to analyze",
-                    "success": True,
-                    "processed_files_output": {}
+                    "error": "No processed files provided for analysis",
+                    "success": False
                 }
             
             logger.info(f"{self.name}: Starting multi-agent analysis of {len(processed_files)} files")
             
-            # Prepare context for agents
-            context = {
-                "case_theory": config.case_theory if config else {},
-                "case_name": data.get("case_name", "Unknown Case"),
-                "analysis_depth": getattr(config, 'ai_analysis_depth', 'standard') if config else 'standard'
-            }
-            
-            # Convert processed files to document format expected by agents
-            documents_for_analysis = []
-            file_path_mapping = {}  # Map agent format back to LCAS format
-            
-            for file_path, file_analysis_data in processed_files.items():
-                # Convert FileAnalysisData to format expected by agents
-                document_data = {
+            # Prepare documents for agent analysis
+            documents = []
+            for file_path, file_data in processed_files.items():
+                doc_data = {
                     "file_path": file_path,
-                    "content": getattr(file_analysis_data, 'content', '') or getattr(file_analysis_data, 'extracted_text_content', ''),
-                    "file_info": {
-                        "size": getattr(file_analysis_data, 'size_bytes', 0),
-                        "created": getattr(file_analysis_data, 'created_timestamp', None),
-                        "modified": getattr(file_analysis_data, 'modified_timestamp', None)
-                    }
+                    "content": getattr(file_data, 'content', ''),
+                    "metadata": getattr(file_data, 'metadata', {}),
+                    "file_size": getattr(file_data, 'file_size', 0),
+                    "file_type": getattr(file_data, 'file_type', 'unknown'),
+                    "hash_sha256": getattr(file_data, 'hash_sha256', '')
                 }
-                
-                # Add document type if available from previous analysis
-                if hasattr(file_analysis_data, 'ai_analysis_raw') and file_analysis_data.ai_analysis_raw:
-                    ai_data = file_analysis_data.ai_analysis_raw
-                    if isinstance(ai_data, dict):
-                        document_data["document_type"] = ai_data.get("document_type", {})
-                
-                documents_for_analysis.append(document_data)
-                file_path_mapping[file_path] = file_analysis_data
+                documents.append(doc_data)
+            
+            # Prepare context for analysis
+            context = {
+                "case_name": data.get("case_name", "Unknown Case"),
+                "case_theory": config.case_theory if config else {},
+                "source_directory": data.get("source_directory", ""),
+                "target_directory": data.get("target_directory", ""),
+                "analysis_timestamp": data.get("timestamp", "")
+            }
             
             # Run multi-agent analysis
-            workflow = "comprehensive"  # Could be configurable
-            max_concurrent = getattr(config, 'max_concurrent_files', 3) if config else 3
+            workflow_name = getattr(config, 'ai_analysis_depth', 'comprehensive')
+            if workflow_name == 'basic':
+                workflow_name = 'quick'
+            elif workflow_name == 'standard':
+                workflow_name = 'strategic'
             
             batch_result = await self.agent_coordinator.analyze_case_batch(
-                documents_for_analysis,
-                workflow_name=workflow,
+                documents=documents,
+                workflow_name=workflow_name,
                 context=context,
-                max_concurrent=max_concurrent
+                max_concurrent=config.max_concurrent_files if config else 3
             )
             
-            # Process results and update FileAnalysisData objects
-            updated_files = {}
+            logger.info(f"{self.name}: Multi-agent analysis completed successfully")
             
-            for doc_result in batch_result.get("document_results", []):
-                doc_path = doc_result.get("document_path", "")
-                
-                if doc_path in file_path_mapping:
-                    file_analysis_data = file_path_mapping[doc_path]
-                    
-                    # Update FileAnalysisData with multi-agent results
-                    consolidated_analysis = doc_result.get("consolidated_analysis", {})
-                    agent_results = doc_result.get("agent_results", {})
-                    
-                    # Store multi-agent results
-                    if hasattr(file_analysis_data, 'custom_metadata'):
-                        file_analysis_data.custom_metadata["multi_agent_analysis"] = {
-                            "consolidated_analysis": consolidated_analysis,
-                            "agent_results": agent_results,
-                            "workflow_used": workflow,
-                            "processing_time": doc_result.get("processing_time", 0)
-                        }
-                    
-                    # Update evidence scores if available
-                    evidence_strength = consolidated_analysis.get("evidence_strength", 0.0)
-                    if hasattr(file_analysis_data, 'evidence_scores'):
-                        file_analysis_data.evidence_scores["multi_agent_strength"] = evidence_strength
-                    
-                    # Update AI summary with consolidated findings
-                    if hasattr(file_analysis_data, 'ai_summary'):
-                        key_findings = consolidated_analysis.get("key_findings", [])
-                        if key_findings:
-                            file_analysis_data.ai_summary = f"Multi-agent analysis: {'; '.join(key_findings[:3])}"
-                    
-                    # Update tags with agent insights
-                    if hasattr(file_analysis_data, 'ai_tags'):
-                        recommendations = consolidated_analysis.get("recommendations", [])
-                        for rec in recommendations[:3]:  # Add top 3 recommendations as tags
-                            tag = rec.split(":")[0].strip()  # Extract tag from recommendation
-                            if tag not in file_analysis_data.ai_tags:
-                                file_analysis_data.ai_tags.append(tag)
-                    
-                    updated_files[doc_path] = file_analysis_data
-            
-            # Generate case-level insights
-            case_analysis = batch_result.get("case_analysis", {})
-            
-            # Prepare final result
-            result = {
-                "plugin": self.name,
+            return {
+                "status": "completed",
                 "success": True,
-                "processed_files_output": updated_files,
-                "case_level_analysis": case_analysis,
-                "workflow_used": workflow,
-                "total_documents_analyzed": len(documents_for_analysis),
-                "successful_analyses": batch_result.get("successful_documents", 0),
-                "failed_analyses": batch_result.get("failed_documents_count", 0),
-                "processing_time": batch_result.get("processing_time", 0),
-                "agent_capabilities": self.agent_coordinator.get_agent_capabilities(),
-                "status": "completed"
+                "agent_analysis": batch_result,
+                "files_analyzed": len(documents),
+                "workflow_used": workflow_name,
+                "processing_time": batch_result.get("processing_time", 0)
             }
-            
-            logger.info(f"{self.name}: Completed analysis of {len(documents_for_analysis)} documents")
-            
-            return result
             
         except Exception as e:
             logger.error(f"{self.name}: Analysis failed: {e}", exc_info=True)
             return {
-                "error": str(e),
-                "success": False,
-                "plugin": self.name
+                "error": f"Multi-agent analysis failed: {str(e)}",
+                "success": False
             }
     
-    def get_available_workflows(self) -> Dict[str, Any]:
-        """Get available analysis workflows"""
+    def create_ui_elements(self, parent_widget) -> None:
+        """Create UI elements for the multi-agent analysis plugin"""
+        try:
+            import customtkinter as ctk
+            
+            # Create multi-agent control panel
+            agent_frame = ctk.CTkFrame(parent_widget)
+            agent_frame.pack(fill="x", pady=5, padx=5)
+            
+            ctk.CTkLabel(agent_frame, text="Multi-Agent Analysis Controls", 
+                        font=ctk.CTkFont(weight="bold")).pack(anchor="w", padx=5, pady=2)
+            
+            # Workflow selection
+            workflow_frame = ctk.CTkFrame(agent_frame)
+            workflow_frame.pack(fill="x", padx=5, pady=5)
+            
+            ctk.CTkLabel(workflow_frame, text="Analysis Workflow:").pack(side="left", padx=5)
+            
+            self.workflow_var = ctk.StringVar(value="comprehensive")
+            workflow_menu = ctk.CTkOptionMenu(
+                workflow_frame,
+                variable=self.workflow_var,
+                values=["quick", "strategic", "comprehensive"]
+            )
+            workflow_menu.pack(side="left", padx=5)
+            
+            # Agent status display
+            if self.agent_coordinator:
+                status_frame = ctk.CTkFrame(agent_frame)
+                status_frame.pack(fill="x", padx=5, pady=5)
+                
+                ctk.CTkLabel(status_frame, text="Available Agents:", 
+                            font=ctk.CTkFont(weight="bold")).pack(anchor="w", padx=5)
+                
+                for agent_name in self.agent_coordinator.agents.keys():
+                    ctk.CTkLabel(status_frame, text=f"✓ {agent_name}").pack(anchor="w", padx=20)
+            
+            # Run multi-agent analysis button
+            def run_multi_agent_analysis():
+                if self.lcas_core:
+                    self.lcas_core.update_status("Multi-agent analysis requested from UI")
+                    # This would trigger through the main analysis pipeline
+            
+            ctk.CTkButton(
+                agent_frame,
+                text="Configure Multi-Agent Analysis",
+                command=run_multi_agent_analysis
+            ).pack(pady=5)
+            
+        except ImportError:
+            logger.warning("CustomTkinter not available for UI creation")
+        except Exception as e:
+            logger.error(f"Error creating UI elements: {e}")
+    
+    def get_capabilities(self) -> List[str]:
+        """Get plugin capabilities"""
+        capabilities = [
+            "Multi-agent document analysis",
+            "Workflow orchestration",
+            "Case-level strategic analysis",
+            "Agent coordination and dependency management"
+        ]
+        
         if self.agent_coordinator:
-            return self.agent_coordinator.get_available_workflows()
-        return {}
-    
-    def get_agent_status(self) -> Dict[str, Any]:
-        """Get status of all agents"""
-        if not self.agent_coordinator:
-            return {"error": "Agent coordinator not initialized"}
+            agent_caps = self.agent_coordinator.get_agent_capabilities()
+            for agent_name, caps in agent_caps.items():
+                capabilities.extend([f"{agent_name}: {cap}" for cap in caps])
         
-        status = {}
-        for agent_name, agent in self.agent_coordinator.agents.items():
-            status[agent_name] = {
-                "capabilities": agent.get_capabilities(),
-                "available": True
-            }
-        
-        return status
+        return capabilities
