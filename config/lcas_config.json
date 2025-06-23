@@ -1,8 +1,8 @@
 {
   "case_name": "zucker v pierce",
-  "source_directory": "F:/POST TRIAL DIVORCE",
+  "source_directory": "",
   "target_directory": "F:/6-21-25_target_2",
-  "plugins_directory": "C:\\Users\\manny\\lcas3\\LCAS_2\\lcas2\\plugins",
+  "plugins_directory": "lcas2/plugins",
   "enabled_plugins": [
     "File Ingestion",
     "Hash Generation",

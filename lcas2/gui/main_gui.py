@@ -589,7 +589,7 @@ class LCASMainGUI(ctk.CTk):
         if hasattr(self, "max_concurrent_files_var"): self.max_concurrent_files_var.set(config.max_concurrent_files)
 
         # AI panel should load its own config based on core_app.config.ai_config_path
-        if hasattr(self, 'ai_settings_panel'):
+        if hasattr(self, 'ai_settings_panel') and self.ai_settings_panel is not None:
              self.ai_settings_panel._setup_ui() # Trigger AI panel to reload/refresh its display
 
         self.update_status("Configuration loaded into UI.")
@@ -607,7 +607,9 @@ class LCASMainGUI(ctk.CTk):
     def _on_core_initialized(self, data: Optional[dict]):
         config_data = data.get("config") if data else None
         if self.core_app and config_data:
-            self.update_status("LCAS Core Initialized Successfully.")
+            loaded_plugins_count = len(self.core_app.plugin_manager.loaded_plugins)
+            self.update_status(f"LCAS Core Initialized Successfully. Loaded {loaded_plugins_count} plugins.")
+            logger.info(f"Core initialized with {loaded_plugins_count} plugins: {list(self.core_app.plugin_manager.loaded_plugins.keys())}")
             self.core = self.core_app  # Set core reference for compatibility
             self.after(0, self._load_app_config_to_ui) # Load config into UI elements
             self.after(0, self._initialize_ai_panel) # Initialize AI panel now that core is ready
@@ -726,12 +728,25 @@ class LCASMainGUI(ctk.CTk):
         if not self.core_app.config.source_directory or not self.core_app.config.target_directory:
             messagebox.showerror("Configuration Error", "Source and Target directories must be set."); return
 
+        # Check if plugins are loaded
+        if not self.core_app.plugin_manager.loaded_plugins:
+            messagebox.showerror("Plugin Error", "No plugins are loaded. Check plugins directory configuration."); return
+
         self.update_status("Starting file preservation...")
         self.analysis_progress_bar.set(0) # Reset progress
         self.current_task_label.configure(text="Current Task: Starting Preservation...")
+        self.analysis_log_display.insert(tk.END, f"[{datetime.now().strftime('%H:%M:%S')}] Starting file preservation process...\n")
+        self.analysis_log_display.see(tk.END)
 
         async def task():
-            await self.core_app.run_file_preservation(progress_callback=self._gui_progress_callback)
+            try:
+                result = await self.core_app.run_file_preservation(progress_callback=self._gui_progress_callback)
+                self.after(0, lambda: self.analysis_log_display.insert(tk.END, f"[{datetime.now().strftime('%H:%M:%S')}] File preservation result: {result}\n"))
+                self.after(0, lambda: self.analysis_log_display.see(tk.END))
+            except Exception as e:
+                logger.error(f"File preservation failed: {e}", exc_info=True)
+                self.after(0, lambda: self.analysis_log_display.insert(tk.END, f"[{datetime.now().strftime('%H:%M:%S')}] ERROR: {str(e)}\n"))
+                self.after(0, lambda: self.analysis_log_display.see(tk.END))
 
         asyncio.run_coroutine_threadsafe(task(), self.async_event_loop)
 
@@ -741,12 +756,26 @@ class LCASMainGUI(ctk.CTk):
         if not self.core_app.config.source_directory or not self.core_app.config.target_directory:
             messagebox.showerror("Configuration Error", "Source and Target directories must be set."); return
 
+        # Check if plugins are loaded
+        if not self.core_app.plugin_manager.loaded_plugins:
+            messagebox.showerror("Plugin Error", "No plugins are loaded. Check plugins directory configuration."); return
+
         self.update_status("Starting full analysis...")
         self.analysis_progress_bar.set(0)
         self.current_task_label.configure(text="Current Task: Starting Full Analysis...")
+        self.analysis_log_display.insert(tk.END, f"[{datetime.now().strftime('%H:%M:%S')}] Starting full analysis pipeline...\n")
+        self.analysis_log_display.insert(tk.END, f"[{datetime.now().strftime('%H:%M:%S')}] Loaded plugins: {list(self.core_app.plugin_manager.loaded_plugins.keys())}\n")
+        self.analysis_log_display.see(tk.END)
 
         async def task():
-            await self.core_app.run_full_analysis(progress_callback=self._gui_progress_callback)
+            try:
+                result = await self.core_app.run_full_analysis(progress_callback=self._gui_progress_callback)
+                self.after(0, lambda: self.analysis_log_display.insert(tk.END, f"[{datetime.now().strftime('%H:%M:%S')}] Full analysis completed. Results: {len(result)} plugins executed\n"))
+                self.after(0, lambda: self.analysis_log_display.see(tk.END))
+            except Exception as e:
+                logger.error(f"Full analysis failed: {e}", exc_info=True)
+                self.after(0, lambda: self.analysis_log_display.insert(tk.END, f"[{datetime.now().strftime('%H:%M:%S')}] ERROR: {str(e)}\n"))
+                self.after(0, lambda: self.analysis_log_display.see(tk.END))
 
         asyncio.run_coroutine_threadsafe(task(), self.async_event_loop)
 
