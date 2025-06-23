@@ -1625,6 +1625,37 @@ def create_ai_plugin(lcas_config):
     """Backward compatible factory function"""
     return create_enhanced_ai_plugin(lcas_config)
 
+class EnhancedAiPlugin:
+    """Plugin wrapper for backward compatibility"""
+
+    def __init__(self):
+        self.name = "Enhanced AI Foundation"
+        self.version = "2.0"
+        self.description = "Enhanced AI Foundation Plugin with advanced configuration options"
+        self.ai_plugin = None
+
+    async def initialize(self, core_app):
+        """Initialize the enhanced AI plugin"""
+        try:
+            self.ai_plugin = EnhancedAIFoundationPlugin()
+            logger.info(f"[{self.name}] Enhanced AI Foundation Plugin initialized successfully")
+            return True
+        except Exception as e:
+            logger.error(f"[{self.name}] Failed to initialize: {e}")
+            return False
+
+    async def process(self, data: Dict[str, Any]) -> Dict[str, Any]:
+        """Process data through the enhanced AI plugin"""
+        if not self.ai_plugin:
+            return {"success": False, "error": "Plugin not initialized"}
+
+        # Delegate to the actual AI plugin
+        return await self.ai_plugin.analyze_file_content(
+            content=data.get('content', ''),
+            file_path=data.get('file_path', ''),
+            context=data.get('context', {})
+        )
+
 
 # Example usage and testing
 if __name__ == "__main__":

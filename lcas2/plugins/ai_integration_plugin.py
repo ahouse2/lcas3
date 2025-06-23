@@ -293,8 +293,33 @@ class AiIntegrationOrchestrator:
             conf_dict.setdefault("provider_name", name)
             provider_config_ns = SimpleNamespace(**conf_dict)
             logger.debug(f"[Orchestrator] Initializing provider '{name}' with config: {conf_dict}")
-            if name == "openai": self.providers[name] = EnhancedOpenAIProvider(provider_config_ns, self.user_settings)
-            # ... (elif for anthropic, local, google)
+            if name == "openai":
+                provider_instance = EnhancedOpenAIProvider(provider_config_ns, self.user_settings)
+                self.providers[name] = provider_instance
+                logger.debug(f"[OpenAIProvider] Client initialized for model {provider_config_ns.model}.")
+            elif name == "anthropic":
+                if ANTHROPIC_AVAILABLE:
+                    # Assuming EnhancedAnthropicProvider exists and is correctly implemented
+                    # and takes provider_config_ns and self.user_settings as arguments
+                    provider_instance = EnhancedAnthropicProvider(provider_config_ns, self.user_settings)
+                    self.providers[name] = provider_instance
+                    logger.debug(f"[AnthropicProvider] Client initialized for model {provider_config_ns.model}.")
+                else:
+                    logger.warning(f"[Orchestrator] Anthropic provider configured but anthropic package not available")
+                    continue
+            elif name == "local":
+                if HTTP_AVAILABLE:
+                    # Assuming EnhancedLocalModelProvider exists and is correctly implemented
+                    # and takes provider_config_ns and self.user_settings as arguments
+                    provider_instance = EnhancedLocalModelProvider(provider_config_ns, self.user_settings)
+                    self.providers[name] = provider_instance
+                    logger.debug(f"[LocalModelProvider] Client initialized for model {provider_config_ns.model}.")
+                else:
+                    logger.warning(f"[Orchestrator] Local provider configured but HTTP packages not available")
+                    continue
+            else:
+                logger.warning(f"[Orchestrator] Unknown provider type configured: {name}")
+                continue
             if name in self.providers:
                 logger.info(f"[Orchestrator] Provider '{name}' {( 'initialized and available.' if self.providers[name].is_available() else 'initialized but NOT available (check API key/enabled flag).')}")
             else:
