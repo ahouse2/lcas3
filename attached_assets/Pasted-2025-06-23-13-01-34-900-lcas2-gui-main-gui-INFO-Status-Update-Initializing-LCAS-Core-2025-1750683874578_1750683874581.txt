@@ -1,0 +1,39 @@
+2025-06-23 13:01:34,900 - lcas2.gui.main_gui - INFO - Status Update: Initializing LCAS Core...
+2025-06-23 13:01:34,904 - lcas2.core.core - INFO - Initializing LCASCore. Project Root: /home/runner/workspace
+2025-06-23 13:01:34,904 - lcas2.core.core - INFO - Using Target Directory: /home/runner/workspace/F:/6-21-25_target_2
+2025-06-23 13:01:34,904 - lcas2.core.core.PluginManager - INFO - Discovering plugins in: /home/runner/workspace/lcas2/plugins
+2025-06-23 13:01:35,238 - ai_integration_plugin - INFO - [AI Integration Services] Initializing. Project Root: /home/runner/workspace
+2025-06-23 13:01:35,238 - ai_integration_plugin - ERROR - [AI Integration Services] Failed to initialize AiIntegrationOrchestrator: attempted relative import with no known parent package
+Traceback (most recent call last):
+  File "/home/runner/workspace/lcas2/plugins/ai_integration_plugin.py", line 475, in initialize
+    from .ai_integration_plugin import create_enhanced_ai_plugin as factory_create_orchestrator
+ImportError: attempted relative import with no known parent package
+2025-06-23 13:01:35,238 - lcas2.core.core.PluginManager - ERROR - Failed to initialize plugin: AI Integration Services (from ai_integration_plugin)
+2025-06-23 13:01:35,243 - lcas_ai_wrapper_plugin - INFO - [lcas_ai_wrapper_plugin] Initializing...
+2025-06-23 13:01:35,243 - lcas_ai_wrapper_plugin - WARNING - [lcas_ai_wrapper_plugin] AiIntegrationOrchestrator not found via plugin. Attempting direct creation.
+2025-06-23 13:01:35,243 - lcas2.plugins.ai_integration_plugin - INFO - [Orchestrator] Initializing with config path: config/ai_config.json
+2025-06-23 13:01:35,244 - lcas2.plugins.ai_integration_plugin - INFO - [Orchestrator] Attempting to load AI config from: /home/runner/workspace/config/ai_config.json
+2025-06-23 13:01:35,244 - lcas2.plugins.ai_integration_plugin - INFO - [Orchestrator] Successfully loaded AI config. Preferred provider: openai
+2025-06-23 13:01:35,244 - lcas2.plugins.ai_integration_plugin - INFO - [Orchestrator] Initializing providers. Found 3 provider configs.
+2025-06-23 13:01:35,244 - lcas2.plugins.ai_integration_plugin - DEBUG - [Orchestrator] Initializing provider 'openai' with config: {'enabled': True, 'api_key': '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', 'model': 'gpt-4', 'temperature': 0.1, 'max_tokens': 4000, 'rate_limit_requests_per_minute': 60, 'rate_limit_tokens_per_minute': 150000, 'provider_name': 'openai'}
+2025-06-23 13:01:35,244 - lcas2.plugins.ai_integration_plugin - DEBUG - Provider 'openai' initialized with model 'gpt-4'.
+2025-06-23 13:01:35,244 - lcas2.plugins.ai_integration_plugin - WARNING - [OpenAIProvider] OpenAI SDK not available.
+2025-06-23 13:01:35,245 - lcas2.plugins.ai_integration_plugin - INFO - [Orchestrator] Provider 'openai' initialized but NOT available (check API key/enabled flag).
+2025-06-23 13:01:35,245 - lcas2.plugins.ai_integration_plugin - DEBUG - [Orchestrator] Initializing provider 'anthropic' with config: {'enabled': False, 'api_key': '', 'model': 'claude-3-sonnet-20240229', 'temperature': 0.1, 'max_tokens': 4000, 'rate_limit_requests_per_minute': 50, 'rate_limit_tokens_per_minute': 100000, 'provider_name': 'anthropic'}
+2025-06-23 13:01:35,245 - lcas2.plugins.ai_integration_plugin - WARNING - [Orchestrator] Unknown provider type configured: anthropic
+2025-06-23 13:01:35,245 - lcas2.plugins.ai_integration_plugin - DEBUG - [Orchestrator] Initializing provider 'local' with config: {'enabled': True, 'endpoint': 'http://localhost:11434/v1/', 'model': 'llama3.2:latest', 'temperature': 0.1, 'max_tokens': 4000, 'provider_name': 'local'}
+2025-06-23 13:01:35,245 - lcas2.plugins.ai_integration_plugin - WARNING - [Orchestrator] Unknown provider type configured: local
+2025-06-23 13:01:35,245 - lcas2.plugins.ai_integration_plugin - INFO - [Orchestrator] Finished initializing providers. 1 actual providers instantiated.
+2025-06-23 13:01:35,245 - lcas2.plugins.ai_integration_plugin - INFO - [Orchestrator] Initializing agents. Found 0 agent configs.
+2025-06-23 13:01:35,245 - lcas2.plugins.ai_integration_plugin - INFO - [Orchestrator] Finished initializing agents. 0 agents active.
+2025-06-23 13:01:35,245 - lcas_ai_wrapper_plugin - INFO - [lcas_ai_wrapper_plugin] Directly created AiIntegrationOrchestrator.
+2025-06-23 13:01:35,246 - lcas_ai_wrapper_plugin - WARNING - [lcas_ai_wrapper_plugin] No AI providers seem to be available/configured via orchestrator. Check 'config/ai_config.json'.
+2025-06-23 13:01:35,246 - lcas_ai_wrapper_plugin - INFO - [lcas_ai_wrapper_plugin] Initialized successfully.
+2025-06-23 13:01:35,246 - lcas2.core.core.PluginManager - INFO - Successfully loaded and initialized plugin: lcas_ai_wrapper_plugin (from lcas_ai_wrapper_plugin)
+2025-06-23 13:01:35,246 - lcas2.core.core.PluginManager - INFO - Priority plugin loaded: lcas_ai_wrapper_plugin
+2025-06-23 13:01:35,247 - root - WARNING - OpenAI not available - install with: pip install openai
+2025-06-23 13:01:35,247 - root - WARNING - Anthropic not available - install with: pip install anthropic
+2025-06-23 13:01:35,250 - lcas2.core.core.PluginManager - ERROR - Plugin module ai_foundation_plugin has no recognizable plugin class. Tried: ['AiFoundationPlugin']
+2025-06-23 13:01:35,252 - lcas2.core.core.PluginManager - ERROR - Plugin module enhanced_ai_plugin has no recognizable plugin class. Tried: ['EnhancedAiPlugin']
+2025-06-23 13:01:35,252 - lcas2.core.core.PluginManager - ERROR - Plugin module ai_foundation_plugin has no recognizable plugin class. Tried: ['AiFoundationPlugin']
+2025-06-23 13:01:35,252 - lcas2.core.core.PluginManager - ERROR - Plugin module enhanced_ai_plugin has no recognizable plugin class. Tried: ['EnhancedAiPlugin']
