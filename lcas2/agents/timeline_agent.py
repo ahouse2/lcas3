@@ -897,7 +897,7 @@ Provide timeline analysis in JSON format:
         """Create an error result"""
         processing_time = (datetime.now() - start_time).total_seconds()
         
-        return Agent Result(
+        return AgentResult(
             agent_name=self.name,
             analysis_type="timeline_analysis",
             confidence=0.0,
