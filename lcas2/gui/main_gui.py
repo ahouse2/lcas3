@@ -590,7 +590,6 @@ class LCASMainGUI(ctk.CTk):
 
         # AI panel should load its own config based on core_app.config.ai_config_path
         if hasattr(self, 'ai_settings_panel') and self.ai_settings_panel is not None:
-             if hasattr(self, 'ai_settings_panel') and self.ai_settings_panel is not None:
             self.ai_settings_panel._setup_ui() # Trigger AI panel to reload/refresh its display
 
         self.update_status("Configuration loaded into UI.")
