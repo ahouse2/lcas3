@@ -40,5 +40,49 @@
     "enable_multi_provider_validation": false,
     "enable_structured_output": true,
     "enable_function_calling": true
+  },
+  "agents": {
+    "document_intelligence": {
+      "enabled": true,
+      "provider": "openai",
+      "analysis_type": "document_intelligence",
+      "priority": 1
+    },
+    "legal_analysis": {
+      "enabled": true,
+      "provider": "openai", 
+      "analysis_type": "legal_analysis",
+      "priority": 2
+    },
+    "pattern_discovery": {
+      "enabled": true,
+      "provider": "openai",
+      "analysis_type": "pattern_discovery", 
+      "priority": 3
+    }
+  },
+  "user_settings": {
+    "preferred_provider": "openai",
+    "fallback_providers": ["local", "anthropic"],
+    "analysis_depth": "standard",
+    "confidence_threshold": 0.6,
+    "enable_multi_agent": true,
+    "enable_cross_validation": false,
+    "case_type": "general",
+    "jurisdiction": "US_Federal",
+    "legal_standards": [],
+    "max_content_length": 50000,
+    "batch_processing": true,
+    "parallel_agents": true,
+    "cache_results": true,
+    "include_citations": true,
+    "generate_summaries": true,
+    "legal_memo_format": false,
+    "confidence_explanations": true
+  },
+  "ai_rate_limits": {
+    "max_requests_per_minute": 60,
+    "max_tokens_per_hour": 150000,
+    "pause_on_limit": true
   }
 }
