@@ -3,3 +3,15 @@ modules = ["python-3.12"]
 [nix]
 channel = "stable-24_05"
 packages = ["glibcLocales"]
+
+[workflows]
+runButton = "Run LCAS"
+
+[[workflows.workflow]]
+name = "Run LCAS"
+author = 44165903
+mode = "sequential"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "python run_lcas.py --gui"
