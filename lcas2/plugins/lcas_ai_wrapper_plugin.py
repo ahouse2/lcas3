@@ -74,7 +74,10 @@ class LcasAiWrapperPlugin(AnalysisPlugin):
                 return False
 
             status = self.ai_orchestrator.get_comprehensive_status()
-            available_providers = [p for p, s in status.get("providers", {}).items() if s.get("available", False)]
+            if isinstance(status, dict) and "providers" in status:
+                available_providers = [p for p, s in status["providers"].items() if isinstance(s, dict) and s.get("available", False)]
+            else:
+                available_providers = []
             if not available_providers:
                 logger.warning(f"[{self.name}] No AI providers seem to be available/configured via orchestrator. Check 'config/ai_config.json'.")
             else:

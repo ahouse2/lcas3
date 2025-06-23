@@ -497,9 +497,8 @@ class AiIntegrationPlugin(AnalysisPlugin):
         logger.info(f"[{self.name}] Returning orchestrator status. Health: {comprehensive_status.get('system_health', 'N/A')}")
         return {
             "success": True, "message": "AI Integration Services active.",
-            "status": comprehensive_status,
-            "processed_files_output": data```python
-.get("processed_files", {}) # Pass through files
+            "status: comprehensive_status,
+            "processed_files_output": data.get("processed_files", {}) # Pass through files
         }
 
     def get_integration_orchestrator(self) -> Optional[AiIntegrationOrchestrator]:

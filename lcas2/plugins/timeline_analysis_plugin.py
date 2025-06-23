@@ -14,7 +14,7 @@ from typing import Dict, List, Any, Optional
 from datetime import datetime, date
 from dataclasses import dataclass, asdict
 
-from lcas_core import AnalysisPlugin, UIPlugin
+from lcas2.core.core import AnalysisPlugin, UIPlugin
 
 
 @dataclass
