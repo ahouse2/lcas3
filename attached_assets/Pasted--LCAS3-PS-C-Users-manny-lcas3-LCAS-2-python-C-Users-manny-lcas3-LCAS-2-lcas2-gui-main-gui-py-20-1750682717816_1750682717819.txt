@@ -1,0 +1,613 @@
+(LCAS3) PS C:\Users\manny\lcas3\LCAS_2> python C:\Users\manny\lcas3\LCAS_2\lcas2\gui\main_gui.py
+2025-06-22 22:40:51,571 - __main__ - INFO - Starting LCAS_2 GUI Application...
+2025-06-22 22:40:53,818 - __main__ - INFO - Status Update: Initializing LCAS Core...
+2025-06-22 22:40:53,843 - lcas2.core.core - INFO - Initializing LCASCore. Project Root: C:\Users\manny\lcas3\LCAS_2
+2025-06-22 22:40:53,845 - lcas2.core.core - INFO - Using Target Directory: F:/6-21-25_target_2
+2025-06-22 22:40:53,916 - lcas2.core.core.PluginManager - INFO - Discovering plugins in: C:\Users\manny\lcas3\LCAS_2\lcas2\plugins
+2025-06-22 22:40:54,972 - lcas2.core.core.PluginManager - ERROR - Error loading plugin advanced_pattern_discovery_plugin: non-default argument 'pattern_type' follows default argument 'pattern_id'
+Traceback (most recent call last):
+  File "C:\Users\manny\lcas3\LCAS_2\lcas2\core\core.py", line 171, in load_plugin
+    module = importlib.import_module(plugin_name_stem) # Use stem for import
+  File "C:\Python313\Lib\importlib\__init__.py", line 88, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 1026, in exec_module
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "C:\Users\manny\lcas3\LCAS_2\lcas2\plugins\advanced_pattern_discovery_plugin.py", line 41, in <module>
+    @dataclass
+     ^^^^^^^^^
+  File "C:\Python313\Lib\dataclasses.py", line 1305, in dataclass
+    return wrap(cls)
+  File "C:\Python313\Lib\dataclasses.py", line 1295, in wrap
+    return _process_class(cls, init, repr, eq, order, unsafe_hash,
+                          frozen, match_args, kw_only, slots,
+                          weakref_slot)
+  File "C:\Python313\Lib\dataclasses.py", line 1078, in _process_class
+    _init_fn(all_init_fields,
+    ~~~~~~~~^^^^^^^^^^^^^^^^^
+             std_init_fields,
+             ^^^^^^^^^^^^^^^^
+    ...<9 lines>...
+             slots,
+             ^^^^^^
+             )
+             ^
+  File "C:\Python313\Lib\dataclasses.py", line 627, in _init_fn
+    raise TypeError(f'non-default argument {f.name!r} '
+                    f'follows default argument {seen_default.name!r}')
+TypeError: non-default argument 'pattern_type' follows default argument 'pattern_id'
+2025-06-22 22:40:59,667 - lcas2.core.core.PluginManager - ERROR - Plugin module ai_foundation_plugin has no class AiFoundationPlugin
+2025-06-22 22:40:59,702 - ai_integration_plugin - INFO - [AI Integration Services] Initializing. Project Root: C:\Users\manny\lcas3\LCAS_2
+2025-06-22 22:40:59,703 - ai_integration_plugin - ERROR - [AI Integration Services] Failed to initialize AiIntegrationOrchestrator: attempted relative import with no known parent package
+Traceback (most recent call last):
+  File "C:\Users\manny\lcas3\LCAS_2\lcas2\plugins\ai_integration_plugin.py", line 475, in initialize
+    from .ai_integration_plugin import create_enhanced_ai_plugin as factory_create_orchestrator
+ImportError: attempted relative import with no known parent package
+2025-06-22 22:40:59,705 - lcas2.core.core.PluginManager - ERROR - Failed to initialize plugin: AI Integration Services (from ai_integration_plugin)
+2025-06-22 22:40:59,725 - content_extraction_plugin - DEBUG - [Content Extraction] Instance created.
+2025-06-22 22:40:59,725 - content_extraction_plugin - INFO - [Content Extraction v0.1.0] Initialized.
+2025-06-22 22:40:59,726 - lcas2.core.core.PluginManager - INFO - Successfully loaded and initialized plugin: Content Extraction (from content_extraction_plugin)
+2025-06-22 22:40:59,776 - lcas2.core.core.PluginManager - ERROR - Plugin module enhanced_ai_plugin has no class EnhancedAiPlugin
+2025-06-22 22:40:59,802 - lcas2.core.core.PluginManager - INFO - Successfully loaded and initialized plugin: Evidence Categorization (from evidence_categorization_plugin)
+2025-06-22 22:40:59,821 - lcas2.core.core.PluginManager - INFO - Successfully loaded and initialized plugin: File Ingestion (from file_ingestion_plugin)
+2025-06-22 22:40:59,839 - lcas2.core.core.PluginManager - INFO - Successfully loaded and initialized plugin: Hash Generation (from hash_generation_plugin)
+2025-06-22 22:40:59,863 - lcas_ai_wrapper_plugin - INFO - [lcas_ai_wrapper_plugin] Initializing...
+2025-06-22 22:40:59,864 - lcas_ai_wrapper_plugin - WARNING - [lcas_ai_wrapper_plugin] AiIntegrationOrchestrator not found via 'AI Integration Services' plugin. Attempting direct creation.
+2025-06-22 22:40:59,867 - lcas2.plugins.ai_integration_plugin - INFO - [Factory] Creating AiIntegrationOrchestrator. Config: 'config/ai_config.json', Root: 'C:\Users\manny\lcas3\LCAS_2'
+2025-06-22 22:40:59,869 - lcas2.plugins.ai_integration_plugin - INFO - [Orchestrator] Initializing with config path: config/ai_config.json
+2025-06-22 22:40:59,871 - lcas2.plugins.ai_integration_plugin - INFO - [Orchestrator] Attempting to load AI config from: C:\Users\manny\lcas3\LCAS_2\config\ai_config.json
+2025-06-22 22:40:59,886 - lcas2.plugins.ai_integration_plugin - INFO - [Orchestrator] Successfully loaded AI config. Preferred provider: openai
+2025-06-22 22:40:59,887 - lcas2.plugins.ai_integration_plugin - INFO - [Orchestrator] Initializing providers. Found 3 provider configs.
+2025-06-22 22:40:59,888 - lcas2.plugins.ai_integration_plugin - DEBUG - [Orchestrator] Initializing provider 'openai' with config: {'enabled': True, 'api_key': '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', 'model': 'gpt-4', 'temperature': 0.1, 'max_tokens': 4000, 'rate_limit_requests_per_minute': 60, 'rate_limit_tokens_per_minute': 150000, 'provider_name': 'openai'}
+2025-06-22 22:40:59,889 - lcas2.plugins.ai_integration_plugin - DEBUG - Provider 'openai' initialized with model 'gpt-4'.
+2025-06-22 22:41:00,340 - lcas2.plugins.ai_integration_plugin - DEBUG - [OpenAIProvider] Client initialized for model gpt-4.
+2025-06-22 22:41:00,341 - lcas2.plugins.ai_integration_plugin - INFO - [Orchestrator] Provider 'openai' initialized and available.
+2025-06-22 22:41:00,342 - lcas2.plugins.ai_integration_plugin - DEBUG - [Orchestrator] Initializing provider 'anthropic' with config: {'enabled': False, 'api_key': '', 'model': 'claude-3-sonnet-20240229', 'temperature': 0.1, 'max_tokens': 4000, 'rate_limit_requests_per_minute': 50, 'rate_limit_tokens_per_minute': 100000, 'provider_name': 'anthropic'}
+2025-06-22 22:41:00,343 - lcas2.plugins.ai_integration_plugin - WARNING - [Orchestrator] Unknown provider type configured: anthropic
+2025-06-22 22:41:00,344 - lcas2.plugins.ai_integration_plugin - DEBUG - [Orchestrator] Initializing provider 'local' with config: {'enabled': True, 'endpoint': 'http://localhost:11434/v1/', 'model': 'llama3.2:latest', 'temperature': 0.1, 'max_tokens': 4000, 'provider_name': 'local'}
+2025-06-22 22:41:00,345 - lcas2.plugins.ai_integration_plugin - WARNING - [Orchestrator] Unknown provider type configured: local
+2025-06-22 22:41:00,346 - lcas2.plugins.ai_integration_plugin - INFO - [Orchestrator] Finished initializing providers. 1 actual providers instantiated.
+2025-06-22 22:41:00,347 - lcas2.plugins.ai_integration_plugin - INFO - [Orchestrator] Initializing agents. Found 0 agent configs.
+2025-06-22 22:41:00,348 - lcas2.plugins.ai_integration_plugin - INFO - [Orchestrator] Finished initializing agents. 0 agents active.
+2025-06-22 22:41:00,350 - lcas_ai_wrapper_plugin - INFO - [lcas_ai_wrapper_plugin] Directly created AiIntegrationOrchestrator.
+2025-06-22 22:41:00,351 - lcas_ai_wrapper_plugin - ERROR - [lcas_ai_wrapper_plugin] Error during initialization: 'bool' object has no attribute 'get'
+Traceback (most recent call last):
+  File "C:\Users\manny\lcas3\LCAS_2\lcas2\plugins\lcas_ai_wrapper_plugin.py", line 64, in initialize
+    available_providers = [p for p, s in status.get("providers", {}).items() if s.get("available", False)]
+                                                                                ^^^^^
+AttributeError: 'bool' object has no attribute 'get'
+2025-06-22 22:41:00,355 - lcas2.core.core.PluginManager - ERROR - Failed to initialize plugin: lcas_ai_wrapper_plugin (from lcas_ai_wrapper_plugin)
+2025-06-22 22:41:00,493 - lcas2.core.core.PluginManager - ERROR - Error loading plugin multi_agent_analysis_plugin: invalid syntax (timeline_agent.py, line 900)
+Traceback (most recent call last):
+  File "C:\Users\manny\lcas3\LCAS_2\lcas2\core\core.py", line 171, in load_plugin
+    module = importlib.import_module(plugin_name_stem) # Use stem for import
+  File "C:\Python313\Lib\importlib\__init__.py", line 88, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 1026, in exec_module
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "C:\Users\manny\lcas3\LCAS_2\lcas2\plugins\multi_agent_analysis_plugin.py", line 12, in <module>
+    from lcas2.agents import AgentCoordinator
+  File "C:\Users\manny\lcas3\LCAS_2\lcas2\agents\__init__.py", line 8, in <module>
+    from .timeline_agent import TimelineAgent
+  File "C:\Users\manny\lcas3\LCAS_2\lcas2\agents\timeline_agent.py", line 900
+    return Agent Result(
+                 ^^^^^^
+SyntaxError: invalid syntax
+2025-06-22 22:41:00,522 - lcas2.core.core.PluginManager - INFO - Successfully loaded and initialized plugin: Pattern Discovery (from pattern_discovery_plugin)
+2025-06-22 22:41:00,544 - lcas2.core.core.PluginManager - INFO - Successfully loaded and initialized plugin: Report Generation (from report_generation_plugin)
+2025-06-22 22:41:00,566 - lcas2.core.core.PluginManager - ERROR - Error loading plugin timeline_analysis_plugin: No module named 'lcas_core'
+Traceback (most recent call last):
+  File "C:\Users\manny\lcas3\LCAS_2\lcas2\core\core.py", line 171, in load_plugin
+    module = importlib.import_module(plugin_name_stem) # Use stem for import
+  File "C:\Python313\Lib\importlib\__init__.py", line 88, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 1026, in exec_module
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "C:\Users\manny\lcas3\LCAS_2\lcas2\plugins\timeline_analysis_plugin.py", line 17, in <module>
+    from lcas_core import AnalysisPlugin, UIPlugin
+ModuleNotFoundError: No module named 'lcas_core'
+2025-06-22 22:41:00,598 - lcas2.core.core.PluginManager - ERROR - Error loading plugin timeline_builder_plugin: TimelineBuilderPlugin.__init__() missing 1 required positional argument: 'config'
+Traceback (most recent call last):
+  File "C:\Users\manny\lcas3\LCAS_2\lcas2\core\core.py", line 180, in load_plugin
+    plugin_instance = getattr(module, cls_name)()
+TypeError: TimelineBuilderPlugin.__init__() missing 1 required positional argument: 'config'
+2025-06-22 22:41:00,601 - lcas2.core.core.EventBus - DEBUG - Publishing event: core.initialized with data: {'config': {'case_name': 'zucker v pierce', 'source_directory': 'F:/POST TRIAL DIVORCE', 'target_dir...
+2025-06-22 22:41:00,604 - __main__ - INFO - Status Update: LCAS Core Initialized Successfully.
+Exception in Tkinter callback
+Traceback (most recent call last):
+  File "C:\Python313\Lib\tkinter\__init__.py", line 2068, in __call__
+    return self.func(*args)
+           ~~~~~~~~~^^^^^^^
+  File "C:\Python313\Lib\tkinter\__init__.py", line 862, in callit
+    func(*args)
+    ~~~~^^^^^^^
+  File "C:\Users\manny\lcas3\LCAS_2\lcas2\gui\main_gui.py", line 593, in _load_app_config_to_ui
+    self.ai_settings_panel._setup_ui() # Trigger AI panel to reload/refresh its display
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute '_setup_ui'
+2025-06-22 22:41:00,797 - __main__ - INFO - Creating UI for plugin: Evidence Categorization
+2025-06-22 22:41:00,871 - __main__ - INFO - Creating UI for plugin: File Ingestion
+2025-06-22 22:41:00,923 - __main__ - INFO - Creating UI for plugin: Hash Generation
+2025-06-22 22:41:00,987 - __main__ - INFO - Creating UI for plugin: Pattern Discovery
+2025-06-22 22:41:01,108 - __main__ - INFO - Creating UI for plugin: Report Generation
+2025-06-22 22:41:01,222 - __main__ - INFO - Core asyncio event loop setup in thread.
+2025-06-22 22:41:08,343 - __main__ - DEBUG - Showing panel: config_setup
+2025-06-22 22:41:13,143 - __main__ - INFO - Status Update: Case theory updated for 'zucker v pierce'.
+2025-06-22 22:41:13,147 - lcas2.core.core - INFO - Configuration saved to C:\Users\manny\lcas3\LCAS_2\config\lcas_config.json
+2025-06-22 22:41:13,148 - __main__ - INFO - Status Update: Application configuration saved successfully.
+2025-06-22 22:41:16,488 - lcas2.core.core - INFO - Configuration saved to C:\Users\manny\lcas3\LCAS_2\config\lcas_config.json
+2025-06-22 22:41:16,489 - __main__ - INFO - Status Update: Application configuration saved successfully.
+2025-06-22 22:41:20,491 - __main__ - INFO - AI plugin configuration saved to C:\Users\manny\lcas3\LCAS_2\config\ai_config.json
+2025-06-22 22:41:22,557 - __main__ - INFO - Status Update: AI settings saved.
+2025-06-22 22:41:27,143 - __main__ - DEBUG - Showing panel: plugins_panel
+2025-06-22 22:41:30,243 - __main__ - DEBUG - Showing panel: run_analysis
+2025-06-22 22:41:31,568 - __main__ - INFO - Status Update: Starting file preservation...
+2025-06-22 22:41:59,643 - __main__ - INFO - Status Update: Starting full analysis...
+2025-06-22 22:42:06,504 - __main__ - DEBUG - Showing panel: results
+2025-06-22 22:42:08,613 - __main__ - DEBUG - Showing panel: run_analysis
+2025-06-22 22:42:10,810 - __main__ - INFO - Status Update: Starting full analysis...
+2025-06-22 22:42:12,438 - __main__ - DEBUG - Showing panel: results
+2025-06-22 22:43:21,399 - __main__ - DEBUG - Showing panel: run_analysis
+2025-06-22 22:43:23,420 - __main__ - INFO - Status Update: Starting full analysis...
+2025-06-22 22:43:48,254 - __main__ - INFO - Status Update: Starting file preservation...
+2025-06-22 23:11:57,908 - __main__ - INFO - Status Update: Starting full analysis...
+2025-06-22 23:11:59,166 - __main__ - INFO - Status Update: Starting full analysis...
+2025-06-22 23:11:59,401 - __main__ - INFO - Status Update: Starting full analysis...
+2025-06-22 23:11:59,553 - __main__ - INFO - Status Update: Starting full analysis...
+2025-06-22 23:11:59,726 - __main__ - INFO - Status Update: Starting full analysis...
+2025-06-22 23:11:59,868 - __main__ - INFO - Status Update: Starting full analysis...
+2025-06-22 23:12:00,056 - __main__ - INFO - Status Update: Starting full analysis...
+2025-06-22 23:12:00,211 - __main__ - INFO - Status Update: Starting full analysis...
+2025-06-22 23:12:00,382 - __main__ - INFO - Status Update: Starting full analysis...
+2025-06-22 23:12:00,538 - __main__ - INFO - Status Update: Starting full analysis...
+2025-06-22 23:12:00,711 - __main__ - INFO - Status Update: Starting full analysis...
+2025-06-22 23:12:00,882 - __main__ - INFO - Status Update: Starting full analysis...
+2025-06-22 23:12:01,053 - __main__ - INFO - Status Update: Starting full analysis...
+2025-06-22 23:12:01,211 - __main__ - INFO - Status Update: Starting full analysis...
+2025-06-22 23:12:01,383 - __main__ - INFO - Status Update: Starting full analysis...
+2025-06-22 23:12:01,539 - __main__ - INFO - Status Update: Starting full analysis...
+2025-06-22 23:12:01,712 - __main__ - INFO - Status Update: Starting full analysis...
+2025-06-22 23:12:01,870 - __main__ - INFO - Status Update: Starting full analysis...
+2025-06-22 23:12:02,041 - __main__ - INFO - Status Update: Starting full analysis...
+2025-06-22 23:12:02,198 - __main__ - INFO - Status Update: Starting full analysis...
+2025-06-22 23:12:02,369 - __main__ - INFO - Status Update: Starting full analysis...
+2025-06-22 23:12:02,542 - __main__ - INFO - Status Update: Starting full analysis...
+2025-06-22 23:12:11,615 - __main__ - DEBUG - Showing panel: results
+2025-06-22 23:12:14,728 - __main__ - INFO - Attempting to close application...
+2025-06-22 23:12:16,807 - __main__ - INFO - Status Update: Shutting down LCAS Core...
+2025-06-22 23:12:16,829 - asyncio - DEBUG - Using proactor: IocpProactor
+2025-06-22 23:12:16,872 - lcas2.core.core.EventBus - DEBUG - Publishing event: core.shutdown_started with data: None...
+2025-06-22 23:12:16,875 - content_extraction_plugin - INFO - [Content Extraction v0.1.0] Cleaned up.
+2025-06-22 23:12:16,876 - lcas2.core.core.PluginManager - INFO - Cleaned up plugin: Content Extraction
+2025-06-22 23:12:16,876 - lcas2.core.core.PluginManager - INFO - Cleaned up plugin: Evidence Categorization
+2025-06-22 23:12:16,877 - lcas2.core.core.PluginManager - INFO - Cleaned up plugin: File Ingestion
+2025-06-22 23:12:16,878 - lcas2.core.core.PluginManager - INFO - Cleaned up plugin: Hash Generation
+2025-06-22 23:12:16,879 - lcas2.core.core.PluginManager - INFO - Cleaned up plugin: Pattern Discovery
+2025-06-22 23:12:16,880 - lcas2.core.core.PluginManager - INFO - Cleaned up plugin: Report Generation
+2025-06-22 23:12:16,880 - lcas2.core.core - INFO - LCASCore shutdown complete.
+2025-06-22 23:12:16,882 - lcas2.core.core.EventBus - DEBUG - Publishing event: core.shutdown_completed with data: None...
+2025-06-22 23:12:16,891 - __main__ - INFO - Core shutdown completed via asyncio.run (fallback).
+2025-06-22 23:12:17,123 - __main__ - INFO - LCAS_2 GUI closed.
+(LCAS3) PS C:\Users\manny\lcas3\LCAS_2> python C:\Users\manny\lcas3\LCAS_2\lcas2\gui\main_gui.py
+2025-06-23 05:34:55,220 - __main__ - INFO - Starting LCAS_2 GUI Application...
+2025-06-23 05:34:57,288 - __main__ - INFO - Status Update: Initializing LCAS Core...
+2025-06-23 05:34:57,360 - lcas2.core.core - INFO - Initializing LCASCore. Project Root: C:\Users\manny\lcas3\LCAS_2
+2025-06-23 05:34:57,396 - lcas2.core.core - INFO - Using Target Directory: F:/6-21-25_target_2
+2025-06-23 05:34:57,409 - lcas2.core.core.PluginManager - INFO - Discovering plugins in: C:\Users\manny\lcas3\LCAS_2\lcas2\plugins
+2025-06-23 05:34:57,842 - lcas2.core.core.PluginManager - ERROR - Error loading plugin advanced_pattern_discovery_plugin: non-default argument 'pattern_type' follows default argument 'pattern_id'
+Traceback (most recent call last):
+  File "C:\Users\manny\lcas3\LCAS_2\lcas2\core\core.py", line 171, in load_plugin
+    module = importlib.import_module(plugin_name_stem) # Use stem for import
+  File "C:\Python313\Lib\importlib\__init__.py", line 88, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 1026, in exec_module
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "C:\Users\manny\lcas3\LCAS_2\lcas2\plugins\advanced_pattern_discovery_plugin.py", line 41, in <module>
+    @dataclass
+     ^^^^^^^^^
+  File "C:\Python313\Lib\dataclasses.py", line 1305, in dataclass
+    return wrap(cls)
+  File "C:\Python313\Lib\dataclasses.py", line 1295, in wrap
+    return _process_class(cls, init, repr, eq, order, unsafe_hash,
+                          frozen, match_args, kw_only, slots,
+                          weakref_slot)
+  File "C:\Python313\Lib\dataclasses.py", line 1078, in _process_class
+    _init_fn(all_init_fields,
+    ~~~~~~~~^^^^^^^^^^^^^^^^^
+             std_init_fields,
+             ^^^^^^^^^^^^^^^^
+    ...<9 lines>...
+             slots,
+             ^^^^^^
+             )
+             ^
+  File "C:\Python313\Lib\dataclasses.py", line 627, in _init_fn
+    raise TypeError(f'non-default argument {f.name!r} '
+                    f'follows default argument {seen_default.name!r}')
+TypeError: non-default argument 'pattern_type' follows default argument 'pattern_id'
+2025-06-23 05:35:00,243 - __main__ - DEBUG - Showing panel: config_setup
+2025-06-23 05:35:02,280 - lcas2.core.core.PluginManager - ERROR - Plugin module ai_foundation_plugin has no class AiFoundationPlugin
+2025-06-23 05:35:02,287 - ai_integration_plugin - INFO - [AI Integration Services] Initializing. Project Root: C:\Users\manny\lcas3\LCAS_2
+2025-06-23 05:35:02,288 - ai_integration_plugin - ERROR - [AI Integration Services] Failed to initialize AiIntegrationOrchestrator: attempted relative import with no known parent package
+Traceback (most recent call last):
+  File "C:\Users\manny\lcas3\LCAS_2\lcas2\plugins\ai_integration_plugin.py", line 475, in initialize
+    from .ai_integration_plugin import create_enhanced_ai_plugin as factory_create_orchestrator
+ImportError: attempted relative import with no known parent package
+2025-06-23 05:35:02,291 - lcas2.core.core.PluginManager - ERROR - Failed to initialize plugin: AI Integration Services (from ai_integration_plugin)
+2025-06-23 05:35:02,296 - content_extraction_plugin - DEBUG - [Content Extraction] Instance created.
+2025-06-23 05:35:02,298 - content_extraction_plugin - INFO - [Content Extraction v0.1.0] Initialized.
+2025-06-23 05:35:02,299 - lcas2.core.core.PluginManager - INFO - Successfully loaded and initialized plugin: Content Extraction (from content_extraction_plugin)
+2025-06-23 05:35:02,305 - lcas2.core.core.PluginManager - ERROR - Plugin module enhanced_ai_plugin has no class EnhancedAiPlugin
+2025-06-23 05:35:02,310 - lcas2.core.core.PluginManager - INFO - Successfully loaded and initialized plugin: Evidence Categorization (from evidence_categorization_plugin)
+2025-06-23 05:35:02,315 - lcas2.core.core.PluginManager - INFO - Successfully loaded and initialized plugin: File Ingestion (from file_ingestion_plugin)
+2025-06-23 05:35:02,321 - lcas2.core.core.PluginManager - INFO - Successfully loaded and initialized plugin: Hash Generation (from hash_generation_plugin)
+2025-06-23 05:35:02,332 - lcas_ai_wrapper_plugin - INFO - [lcas_ai_wrapper_plugin] Initializing...
+2025-06-23 05:35:02,332 - lcas_ai_wrapper_plugin - WARNING - [lcas_ai_wrapper_plugin] AiIntegrationOrchestrator not found via 'AI Integration Services' plugin. Attempting direct creation.
+2025-06-23 05:35:02,333 - lcas2.plugins.ai_integration_plugin - INFO - [Factory] Creating AiIntegrationOrchestrator. Config: 'config/ai_config.json', Root: 'C:\Users\manny\lcas3\LCAS_2'
+2025-06-23 05:35:02,334 - lcas2.plugins.ai_integration_plugin - INFO - [Orchestrator] Initializing with config path: config/ai_config.json
+2025-06-23 05:35:02,336 - lcas2.plugins.ai_integration_plugin - INFO - [Orchestrator] Attempting to load AI config from: C:\Users\manny\lcas3\LCAS_2\config\ai_config.json
+2025-06-23 05:35:02,340 - lcas2.plugins.ai_integration_plugin - INFO - [Orchestrator] Successfully loaded AI config. Preferred provider: openai
+2025-06-23 05:35:02,341 - lcas2.plugins.ai_integration_plugin - INFO - [Orchestrator] Initializing providers. Found 3 provider configs.
+2025-06-23 05:35:02,342 - lcas2.plugins.ai_integration_plugin - DEBUG - [Orchestrator] Initializing provider 'openai' with config: {'enabled': True, 'api_key': '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', 'model': 'gpt-4', 'temperature': 0.1, 'max_tokens': 4000, 'rate_limit_requests_per_minute': 60, 'rate_limit_tokens_per_minute': 150000, 'provider_name': 'openai'}
+2025-06-23 05:35:02,345 - lcas2.plugins.ai_integration_plugin - DEBUG - Provider 'openai' initialized with model 'gpt-4'.
+2025-06-23 05:35:02,918 - lcas2.plugins.ai_integration_plugin - DEBUG - [OpenAIProvider] Client initialized for model gpt-4.
+2025-06-23 05:35:02,919 - lcas2.plugins.ai_integration_plugin - INFO - [Orchestrator] Provider 'openai' initialized and available.
+2025-06-23 05:35:02,921 - lcas2.plugins.ai_integration_plugin - DEBUG - [Orchestrator] Initializing provider 'anthropic' with config: {'enabled': False, 'api_key': '', 'model': 'claude-3-sonnet-20240229', 'temperature': 0.1, 'max_tokens': 4000, 'rate_limit_requests_per_minute': 50, 'rate_limit_tokens_per_minute': 100000, 'provider_name': 'anthropic'}
+2025-06-23 05:35:02,922 - lcas2.plugins.ai_integration_plugin - WARNING - [Orchestrator] Unknown provider type configured: anthropic
+2025-06-23 05:35:02,923 - lcas2.plugins.ai_integration_plugin - DEBUG - [Orchestrator] Initializing provider 'local' with config: {'enabled': True, 'endpoint': 'http://localhost:11434/v1/', 'model': 'llama3.2:latest', 'temperature': 0.1, 'max_tokens': 4000, 'provider_name': 'local'}
+2025-06-23 05:35:02,924 - lcas2.plugins.ai_integration_plugin - WARNING - [Orchestrator] Unknown provider type configured: local
+2025-06-23 05:35:02,925 - lcas2.plugins.ai_integration_plugin - INFO - [Orchestrator] Finished initializing providers. 1 actual providers instantiated.
+2025-06-23 05:35:02,927 - lcas2.plugins.ai_integration_plugin - INFO - [Orchestrator] Initializing agents. Found 0 agent configs.
+2025-06-23 05:35:02,929 - lcas2.plugins.ai_integration_plugin - INFO - [Orchestrator] Finished initializing agents. 0 agents active.
+2025-06-23 05:35:02,930 - lcas_ai_wrapper_plugin - INFO - [lcas_ai_wrapper_plugin] Directly created AiIntegrationOrchestrator.
+2025-06-23 05:35:02,931 - lcas_ai_wrapper_plugin - ERROR - [lcas_ai_wrapper_plugin] Error during initialization: 'bool' object has no attribute 'get'
+Traceback (most recent call last):
+  File "C:\Users\manny\lcas3\LCAS_2\lcas2\plugins\lcas_ai_wrapper_plugin.py", line 64, in initialize
+    available_providers = [p for p, s in status.get("providers", {}).items() if s.get("available", False)]
+                                                                                ^^^^^
+AttributeError: 'bool' object has no attribute 'get'
+2025-06-23 05:35:02,935 - lcas2.core.core.PluginManager - ERROR - Failed to initialize plugin: lcas_ai_wrapper_plugin (from lcas_ai_wrapper_plugin)
+2025-06-23 05:35:02,973 - lcas2.core.core.PluginManager - ERROR - Error loading plugin multi_agent_analysis_plugin: invalid syntax (timeline_agent.py, line 900)
+Traceback (most recent call last):
+  File "C:\Users\manny\lcas3\LCAS_2\lcas2\core\core.py", line 171, in load_plugin
+    module = importlib.import_module(plugin_name_stem) # Use stem for import
+  File "C:\Python313\Lib\importlib\__init__.py", line 88, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 1026, in exec_module
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "C:\Users\manny\lcas3\LCAS_2\lcas2\plugins\multi_agent_analysis_plugin.py", line 12, in <module>
+    from lcas2.agents import AgentCoordinator
+  File "C:\Users\manny\lcas3\LCAS_2\lcas2\agents\__init__.py", line 8, in <module>
+    from .timeline_agent import TimelineAgent
+  File "C:\Users\manny\lcas3\LCAS_2\lcas2\agents\timeline_agent.py", line 900
+    return Agent Result(
+                 ^^^^^^
+SyntaxError: invalid syntax
+2025-06-23 05:35:02,989 - lcas2.core.core.PluginManager - INFO - Successfully loaded and initialized plugin: Pattern Discovery (from pattern_discovery_plugin)
+2025-06-23 05:35:02,996 - lcas2.core.core.PluginManager - INFO - Successfully loaded and initialized plugin: Report Generation (from report_generation_plugin)
+2025-06-23 05:35:03,000 - lcas2.core.core.PluginManager - ERROR - Error loading plugin timeline_analysis_plugin: No module named 'lcas_core'
+Traceback (most recent call last):
+  File "C:\Users\manny\lcas3\LCAS_2\lcas2\core\core.py", line 171, in load_plugin
+    module = importlib.import_module(plugin_name_stem) # Use stem for import
+  File "C:\Python313\Lib\importlib\__init__.py", line 88, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 1026, in exec_module
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "C:\Users\manny\lcas3\LCAS_2\lcas2\plugins\timeline_analysis_plugin.py", line 17, in <module>
+    from lcas_core import AnalysisPlugin, UIPlugin
+ModuleNotFoundError: No module named 'lcas_core'
+2025-06-23 05:35:03,012 - lcas2.core.core.PluginManager - ERROR - Error loading plugin timeline_builder_plugin: TimelineBuilderPlugin.__init__() missing 1 required positional argument: 'config'
+Traceback (most recent call last):
+  File "C:\Users\manny\lcas3\LCAS_2\lcas2\core\core.py", line 180, in load_plugin
+    plugin_instance = getattr(module, cls_name)()
+TypeError: TimelineBuilderPlugin.__init__() missing 1 required positional argument: 'config'
+2025-06-23 05:35:03,014 - lcas2.core.core.EventBus - DEBUG - Publishing event: core.initialized with data: {'config': {'case_name': 'zucker v pierce', 'source_directory': 'F:/POST TRIAL DIVORCE', 'target_dir...
+2025-06-23 05:35:03,017 - __main__ - INFO - Status Update: LCAS Core Initialized Successfully.
+Exception in Tkinter callback
+Traceback (most recent call last):
+  File "C:\Python313\Lib\tkinter\__init__.py", line 2068, in __call__
+    return self.func(*args)
+           ~~~~~~~~~^^^^^^^
+  File "C:\Python313\Lib\tkinter\__init__.py", line 862, in callit
+    func(*args)
+    ~~~~^^^^^^^
+  File "C:\Users\manny\lcas3\LCAS_2\lcas2\gui\main_gui.py", line 593, in _load_app_config_to_ui
+    self.ai_settings_panel._setup_ui() # Trigger AI panel to reload/refresh its display
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute '_setup_ui'
+2025-06-23 05:35:03,173 - __main__ - INFO - Creating UI for plugin: Evidence Categorization
+2025-06-23 05:35:03,420 - __main__ - INFO - Creating UI for plugin: File Ingestion
+2025-06-23 05:35:03,556 - __main__ - INFO - Creating UI for plugin: Hash Generation
+2025-06-23 05:35:03,637 - __main__ - INFO - Creating UI for plugin: Pattern Discovery
+2025-06-23 05:35:03,818 - __main__ - INFO - Creating UI for plugin: Report Generation
+2025-06-23 05:35:04,026 - __main__ - INFO - Core asyncio event loop setup in thread.
+2025-06-23 05:35:13,527 - __main__ - INFO - Status Update: Case theory setup cancelled.
+2025-06-23 05:35:15,458 - __main__ - DEBUG - Showing panel: results
+2025-06-23 05:35:16,285 - __main__ - DEBUG - Showing panel: plugins_panel
+Exception in Tkinter callback
+Traceback (most recent call last):
+  File "C:\Python313\Lib\tkinter\__init__.py", line 2068, in __call__
+    return self.func(*args)
+           ~~~~~~~~~^^^^^^^
+  File "C:\Users\manny\lcas3\LCAS_2\lcas2\plugins\evidence_categorization_plugin.py", line 170, in run_analysis_ui
+    if hasattr(self, 'core') and self.core.event_loop:
+                                 ^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'LCASCore' object has no attribute 'event_loop'
+Exception in Tkinter callback
+Traceback (most recent call last):
+  File "C:\Python313\Lib\tkinter\__init__.py", line 2068, in __call__
+    return self.func(*args)
+           ~~~~~~~~~^^^^^^^
+  File "C:\Users\manny\lcas3\LCAS_2\lcas2\plugins\file_ingestion_plugin.py", line 98, in run_analysis_ui
+    if hasattr(self, 'core') and self.core.event_loop:
+                                 ^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'LCASCore' object has no attribute 'event_loop'
+Exception in Tkinter callback
+Traceback (most recent call last):
+  File "C:\Python313\Lib\tkinter\__init__.py", line 2068, in __call__
+    return self.func(*args)
+           ~~~~~~~~~^^^^^^^
+  File "C:\Users\manny\lcas3\LCAS_2\lcas2\plugins\hash_generation_plugin.py", line 204, in run_analysis_ui
+    if hasattr(self, 'core') and self.core.event_loop:
+                                 ^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'LCASCore' object has no attribute 'event_loop'
+Exception in Tkinter callback
+Traceback (most recent call last):
+  File "C:\Python313\Lib\tkinter\__init__.py", line 2068, in __call__
+    return self.func(*args)
+           ~~~~~~~~~^^^^^^^
+  File "C:\Users\manny\lcas3\LCAS_2\lcas2\plugins\pattern_discovery_plugin.py", line 676, in run_analysis_ui
+    if hasattr(self, 'core') and self.core.event_loop:
+                                 ^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'LCASCore' object has no attribute 'event_loop'
+2025-06-23 05:35:53,698 - __main__ - DEBUG - Showing panel: run_analysis
+2025-06-23 05:35:55,253 - __main__ - INFO - Status Update: Starting full analysis...
+2025-06-23 05:36:11,498 - __main__ - INFO - Status Update: Starting file preservation...
+2025-06-23 05:38:05,137 - __main__ - INFO - Attempting to close application...
+2025-06-23 05:38:10,935 - __main__ - INFO - Status Update: Shutting down LCAS Core...
+2025-06-23 05:38:10,945 - asyncio - DEBUG - Using proactor: IocpProactor
+2025-06-23 05:38:10,966 - lcas2.core.core.EventBus - DEBUG - Publishing event: core.shutdown_started with data: None...
+2025-06-23 05:38:10,969 - content_extraction_plugin - INFO - [Content Extraction v0.1.0] Cleaned up.
+2025-06-23 05:38:10,969 - lcas2.core.core.PluginManager - INFO - Cleaned up plugin: Content Extraction
+2025-06-23 05:38:10,970 - lcas2.core.core.PluginManager - INFO - Cleaned up plugin: Evidence Categorization
+2025-06-23 05:38:10,971 - lcas2.core.core.PluginManager - INFO - Cleaned up plugin: File Ingestion
+2025-06-23 05:38:10,972 - lcas2.core.core.PluginManager - INFO - Cleaned up plugin: Hash Generation
+2025-06-23 05:38:10,973 - lcas2.core.core.PluginManager - INFO - Cleaned up plugin: Pattern Discovery
+2025-06-23 05:38:10,974 - lcas2.core.core.PluginManager - INFO - Cleaned up plugin: Report Generation
+2025-06-23 05:38:10,979 - lcas2.core.core - INFO - LCASCore shutdown complete.
+2025-06-23 05:38:10,984 - lcas2.core.core.EventBus - DEBUG - Publishing event: core.shutdown_completed with data: None...
+2025-06-23 05:38:10,990 - __main__ - INFO - Core shutdown completed via asyncio.run (fallback).
+2025-06-23 05:38:11,322 - __main__ - INFO - LCAS_2 GUI closed.
+(LCAS3) PS C:\Users\manny\lcas3\LCAS_2> git sync https://github.com/ahouse2/lcas3.git
+git: 'sync' is not a git command. See 'git --help'.
+
+The most similar command is
+        svn
+(LCAS3) PS C:\Users\manny\lcas3\LCAS_2> git pull https://github.com/ahouse2/lcas3.git
+remote: Enumerating objects: 157, done.
+remote: Counting objects: 100% (157/157), done.
+remote: Compressing objects: 100% (127/127), done.
+remote: Total 157 (delta 51), reused 59 (delta 25), pack-reused 0 (from 0)
+Receiving objects: 100% (157/157), 497.79 KiB | 2.57 MiB/s, done.
+Resolving deltas: 100% (51/51), done.
+From https://github.com/ahouse2/lcas3
+ * branch            HEAD       -> FETCH_HEAD
+fatal: refusing to merge unrelated histories
+(LCAS3) PS C:\Users\manny\lcas3\LCAS_2> git clone https://github.com/ahouse2/lcas3.git
+Cloning into 'lcas3'...
+remote: Enumerating objects: 157, done.
+remote: Counting objects: 100% (157/157), done.
+remote: Compressing objects: 100% (127/127), done.
+remote: Total 157 (delta 51), reused 59 (delta 25), pack-reused 0 (from 0)
+Receiving objects: 100% (157/157), 497.79 KiB | 39.00 KiB/s, done.
+Resolving deltas: 100% (51/51), done.
+(LCAS3) PS C:\Users\manny\lcas3\LCAS_2> cd C:\Users\manny\lcas3\LCAS_2\lcas3
+(LCAS3) PS C:\Users\manny\lcas3\LCAS_2\lcas3> python C:\Users\manny\lcas3\LCAS_2\lcas3\run_lcas.py
+2025-06-23 05:43:26,627 - lcas2.core.core - INFO - Initializing LCASCore. Project Root: C:\Users\manny\lcas3\LCAS_2\lcas3
+2025-06-23 05:43:26,629 - lcas2.core.core - INFO - Using Target Directory: F:/6-21-25_target_2
+2025-06-23 05:43:26,633 - lcas2.core.core.PluginManager - INFO - Discovering plugins in: C:\Users\manny\lcas3\LCAS_2\lcas3\lcas2\plugins
+2025-06-23 05:43:26,703 - lcas2.core.core.PluginManager - ERROR - Error loading plugin ai_integration_plugin: invalid syntax (ai_integration_plugin.py, line 501)
+Traceback (most recent call last):
+  File "C:\Users\manny\lcas3\LCAS_2\lcas3\lcas2\core\core.py", line 171, in load_plugin
+    module = importlib.import_module(plugin_name_stem) # Use stem for import
+  File "C:\Python313\Lib\importlib\__init__.py", line 88, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 1022, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 1160, in get_code
+  File "<frozen importlib._bootstrap_external>", line 1090, in source_to_code
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "C:\Users\manny\lcas3\LCAS_2\lcas3\lcas2\plugins\ai_integration_plugin.py", line 501
+    "processed_files_output": data```python
+                                  ^
+SyntaxError: invalid syntax
+2025-06-23 05:43:26,789 - lcas2.core.core.PluginManager - ERROR - Error loading plugin lcas_ai_wrapper_plugin: invalid syntax (ai_integration_plugin.py, line 501)
+Traceback (most recent call last):
+  File "C:\Users\manny\lcas3\LCAS_2\lcas3\lcas2\core\core.py", line 171, in load_plugin
+    module = importlib.import_module(plugin_name_stem) # Use stem for import
+  File "C:\Python313\Lib\importlib\__init__.py", line 88, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 1026, in exec_module
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "C:\Users\manny\lcas3\LCAS_2\lcas3\lcas2\plugins\lcas_ai_wrapper_plugin.py", line 13, in <module>
+    from lcas2.plugins.ai_integration_plugin import AiIntegrationOrchestrator
+  File "C:\Users\manny\lcas3\LCAS_2\lcas3\lcas2\plugins\ai_integration_plugin.py", line 501
+    "processed_files_output": data```python
+                                  ^
+SyntaxError: invalid syntax
+2025-06-23 05:43:30,923 - lcas2.core.core.PluginManager - ERROR - Plugin module ai_foundation_plugin has no recognizable plugin class. Tried: ['AiFoundationPlugin']
+2025-06-23 05:43:31,018 - lcas2.core.core.PluginManager - ERROR - Plugin module enhanced_ai_plugin has no recognizable plugin class. Tried: ['EnhancedAiPlugin']
+2025-06-23 05:43:31,317 - lcas2.core.core.PluginManager - ERROR - Error loading plugin advanced_pattern_discovery_plugin: non-default argument 'pattern_type' follows default argument 'pattern_id'
+Traceback (most recent call last):
+  File "C:\Users\manny\lcas3\LCAS_2\lcas3\lcas2\core\core.py", line 171, in load_plugin
+    module = importlib.import_module(plugin_name_stem) # Use stem for import
+  File "C:\Python313\Lib\importlib\__init__.py", line 88, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 1026, in exec_module
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "C:\Users\manny\lcas3\LCAS_2\lcas3\lcas2\plugins\advanced_pattern_discovery_plugin.py", line 41, in <module>
+    @dataclass
+     ^^^^^^^^^
+  File "C:\Python313\Lib\dataclasses.py", line 1305, in dataclass
+    return wrap(cls)
+  File "C:\Python313\Lib\dataclasses.py", line 1295, in wrap
+    return _process_class(cls, init, repr, eq, order, unsafe_hash,
+                          frozen, match_args, kw_only, slots,
+                          weakref_slot)
+  File "C:\Python313\Lib\dataclasses.py", line 1078, in _process_class
+    _init_fn(all_init_fields,
+    ~~~~~~~~^^^^^^^^^^^^^^^^^
+             std_init_fields,
+             ^^^^^^^^^^^^^^^^
+    ...<9 lines>...
+             slots,
+             ^^^^^^
+             )
+             ^
+  File "C:\Python313\Lib\dataclasses.py", line 627, in _init_fn
+    raise TypeError(f'non-default argument {f.name!r} '
+                    f'follows default argument {seen_default.name!r}')
+TypeError: non-default argument 'pattern_type' follows default argument 'pattern_id'
+2025-06-23 05:43:31,335 - lcas2.core.core.PluginManager - ERROR - Plugin module ai_foundation_plugin has no recognizable plugin class. Tried: ['AiFoundationPlugin']
+2025-06-23 05:43:31,374 - lcas2.core.core.PluginManager - ERROR - Error loading plugin ai_integration_plugin: invalid syntax (ai_integration_plugin.py, line 501)
+Traceback (most recent call last):
+  File "C:\Users\manny\lcas3\LCAS_2\lcas3\lcas2\core\core.py", line 171, in load_plugin
+    module = importlib.import_module(plugin_name_stem) # Use stem for import
+  File "C:\Python313\Lib\importlib\__init__.py", line 88, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 1022, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 1160, in get_code
+  File "<frozen importlib._bootstrap_external>", line 1090, in source_to_code
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "C:\Users\manny\lcas3\LCAS_2\lcas3\lcas2\plugins\ai_integration_plugin.py", line 501
+    "processed_files_output": data```python
+                                  ^
+SyntaxError: invalid syntax
+2025-06-23 05:43:31,384 - lcas2.core.core.PluginManager - ERROR - Plugin module enhanced_ai_plugin has no recognizable plugin class. Tried: ['EnhancedAiPlugin']
+2025-06-23 05:43:31,404 - lcas2.core.core.PluginManager - INFO - Successfully loaded and initialized plugin: Evidence Categorization (from evidence_categorization_plugin)
+2025-06-23 05:43:31,422 - lcas2.core.core.PluginManager - INFO - Successfully loaded and initialized plugin: File Ingestion (from file_ingestion_plugin)
+2025-06-23 05:43:31,465 - lcas2.core.core.PluginManager - INFO - Successfully loaded and initialized plugin: Hash Generation (from hash_generation_plugin)
+2025-06-23 05:43:31,526 - lcas2.core.core.PluginManager - ERROR - Error loading plugin lcas_ai_wrapper_plugin: invalid syntax (ai_integration_plugin.py, line 501)
+Traceback (most recent call last):
+  File "C:\Users\manny\lcas3\LCAS_2\lcas3\lcas2\core\core.py", line 171, in load_plugin
+    module = importlib.import_module(plugin_name_stem) # Use stem for import
+  File "C:\Python313\Lib\importlib\__init__.py", line 88, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 1026, in exec_module
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "C:\Users\manny\lcas3\LCAS_2\lcas3\lcas2\plugins\lcas_ai_wrapper_plugin.py", line 13, in <module>
+    from lcas2.plugins.ai_integration_plugin import AiIntegrationOrchestrator
+  File "C:\Users\manny\lcas3\LCAS_2\lcas3\lcas2\plugins\ai_integration_plugin.py", line 501
+    "processed_files_output": data```python
+                                  ^
+SyntaxError: invalid syntax
+2025-06-23 05:43:31,798 - lcas2.core.core.PluginManager - ERROR - Error loading plugin multi_agent_analysis_plugin: invalid syntax (timeline_agent.py, line 900)
+Traceback (most recent call last):
+  File "C:\Users\manny\lcas3\LCAS_2\lcas3\lcas2\core\core.py", line 171, in load_plugin
+    module = importlib.import_module(plugin_name_stem) # Use stem for import
+  File "C:\Python313\Lib\importlib\__init__.py", line 88, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 1026, in exec_module
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "C:\Users\manny\lcas3\LCAS_2\lcas3\lcas2\plugins\multi_agent_analysis_plugin.py", line 12, in <module>
+    from lcas2.agents import AgentCoordinator
+  File "C:\Users\manny\lcas3\LCAS_2\lcas3\lcas2\agents\__init__.py", line 8, in <module>
+    from .timeline_agent import TimelineAgent
+  File "C:\Users\manny\lcas3\LCAS_2\lcas3\lcas2\agents\timeline_agent.py", line 900
+    return Agent Result(
+                 ^^^^^^
+SyntaxError: invalid syntax
+2025-06-23 05:43:31,884 - lcas2.core.core.PluginManager - INFO - Successfully loaded and initialized plugin: Pattern Discovery (from pattern_discovery_plugin)
+2025-06-23 05:43:31,927 - lcas2.core.core.PluginManager - INFO - Successfully loaded and initialized plugin: Report Generation (from report_generation_plugin)
+2025-06-23 05:43:31,980 - lcas2.core.core.PluginManager - ERROR - Error loading plugin timeline_analysis_plugin: No module named 'lcas_core'
+Traceback (most recent call last):
+  File "C:\Users\manny\lcas3\LCAS_2\lcas3\lcas2\core\core.py", line 171, in load_plugin
+    module = importlib.import_module(plugin_name_stem) # Use stem for import
+  File "C:\Python313\Lib\importlib\__init__.py", line 88, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 1026, in exec_module
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "C:\Users\manny\lcas3\LCAS_2\lcas3\lcas2\plugins\timeline_analysis_plugin.py", line 17, in <module>
+    from lcas_core import AnalysisPlugin, UIPlugin
+ModuleNotFoundError: No module named 'lcas_core'
+2025-06-23 05:43:32,026 - lcas2.core.core.PluginManager - ERROR - Error loading plugin timeline_builder_plugin: TimelineBuilderPlugin.__init__() missing 1 required positional argument: 'config'
+Traceback (most recent call last):
+  File "C:\Users\manny\lcas3\LCAS_2\lcas3\lcas2\core\core.py", line 211, in load_plugin
+    plugin_instance = plugin_class()
+TypeError: TimelineBuilderPlugin.__init__() missing 1 required positional argument: 'config'
+2025-06-23 05:43:32,029 - lcas2.core.core.PluginManager - INFO - Loaded 5 plugins: ['Evidence Categorization', 'File Ingestion', 'Hash Generation', 'Pattern Discovery', 'Report Generation']
+2025-06-23 05:43:32,033 - lcas2.core.core.EventBus - DEBUG - Publishing event: core.initialized with data: {'config': {'case_name': 'zucker v pierce', 'source_directory': '', 'target_directory': 'F:/6-21-25_...
+LCAS Core Application started successfully
+Loaded plugins: ['Evidence Categorization', 'File Ingestion', 'Hash Generation', 'Pattern Discovery', 'Report Generation']
+No source/target directories configured. Use --source and --target options.
+2025-06-23 05:43:32,040 - lcas2.core.core.EventBus - DEBUG - Publishing event: core.shutdown_started with data: None...
+2025-06-23 05:43:32,042 - lcas2.core.core.PluginManager - INFO - Cleaned up plugin: Evidence Categorization
+2025-06-23 05:43:32,044 - lcas2.core.core.PluginManager - INFO - Cleaned up plugin: File Ingestion
+2025-06-23 05:43:32,045 - lcas2.core.core.PluginManager - INFO - Cleaned up plugin: Hash Generation
+2025-06-23 05:43:32,050 - lcas2.core.core.PluginManager - INFO - Cleaned up plugin: Pattern Discovery
+2025-06-23 05:43:32,052 - lcas2.core.core.PluginManager - INFO - Cleaned up plugin: Report Generation
+2025-06-23 05:43:32,057 - lcas2.core.core - INFO - LCASCore shutdown complete.
+2025-06-23 05:43:32,061 - lcas2.core.core.EventBus - DEBUG - Publishing event: core.shutdown_completed with data: None...
