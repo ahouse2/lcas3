@@ -710,6 +710,18 @@ class PatternDiscoveryPlugin:
                 self._add_theory(theory)
 
         # Abuse of Legal Process / Fraud on the Court
-        legal_process_patterns = patterns_by_type.get('legal_process', []):
-                    content_to_parse = content_to_parse[7:]
-                    if content_to_parse.endswith("
+        legal_process_patterns = patterns_by_type.get('legal_process', [])
+        # TODO: Implement theory synthesis for Abuse of Legal Process / Fraud on the Court
+        # using legal_process_patterns, similar to how other theories are synthesized above.
+        # Example structure:
+        # if legal_process_patterns:
+        #     supporting_pattern_ids = [p.pattern_id for p in legal_process_patterns]
+        #     avg_strength = sum(p.confidence_score for p in legal_process_patterns) / len(legal_process_patterns) if legal_process_patterns else 0
+        #     theory = LegalTheory(
+        #         theory_name="Potential Abuse of Legal Process / Fraud on the Court",
+        #         description="Patterns suggest potential abuse of the legal process...",
+        #         supporting_patterns=supporting_pattern_ids,
+        #         evidence_strength=avg_strength,
+        #         # ... other fields ...
+        #     )
+        #     self._add_theory(theory)
