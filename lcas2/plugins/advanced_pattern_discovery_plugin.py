@@ -802,4 +802,4 @@ class PatternDiscoveryPlugin:
                 # Check if response is wrapped in markdown json block
                 if content_to_parse.startswith("```json"):
                     content_to_parse = content_to_parse[7:]
-                    if content_to_parse.endswith("
+                    if content_to_parse.endswith("```"):
