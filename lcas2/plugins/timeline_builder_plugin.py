@@ -13,6 +13,8 @@ from collections import defaultdict
 import json
 from pathlib import Path
 
+from lcas2.core.core import AnalysisPlugin, LCASCore
+
 logger = logging.getLogger(__name__)
 
 
@@ -47,14 +49,58 @@ class Timeline:
     critical_periods: List[Dict[str, Any]]
 
 
-class TimelineBuilderPlugin:
+class TimelineBuilderPlugin(AnalysisPlugin):
     """Plugin for building comprehensive legal timelines"""
 
-    def __init__(self, config, ai_service=None):
-        self.config = config
-        self.ai_service = ai_service
+    def __init__(self):
+        self.config = None
+        self.ai_service = None
         self.date_patterns = self._initialize_date_patterns()
         self.legal_argument_timelines = defaultdict(list)
+
+    @property
+    def name(self) -> str:
+        return "Timeline Builder"
+
+    @property
+    def version(self) -> str:
+        return "1.0.0"
+
+    @property
+    def description(self) -> str:
+        return "Builds comprehensive legal timelines from evidence files"
+
+    @property
+    def dependencies(self) -> List[str]:
+        return []
+
+    async def initialize(self, core_app: LCASCore) -> bool:
+        """Initialize the timeline builder plugin"""
+        self.config = core_app.config
+        return True
+
+    async def cleanup(self) -> None:
+        """Cleanup resources"""
+        pass
+
+    async def analyze(self, data: Any) -> Dict[str, Any]:
+        """Analyze data and build timelines"""
+        try:
+            processed_files = data.get("processed_files", {})
+            timelines = await self.build_timelines_for_case(processed_files)
+
+            return {
+                "success": True,
+                "timelines": timelines,
+                "processed_files_output": processed_files
+            }
+        except Exception as e:
+            logger.error(f"Timeline analysis failed: {e}")
+            return {
+                "success": False,
+                "error": str(e),
+                "processed_files_output": data.get("processed_files", {})
+            }
 
     def _initialize_date_patterns(self) -> List[Dict[str, Any]]:
         """Initialize regex patterns for date extraction"""
@@ -830,7 +876,7 @@ Maximum 3 paragraphs.
                     f"**Strength Score:** {timeline.strength_score:.2f}\n\n")
 
                 f.write("## Narrative Summary\n\n")
-                f.write(timeline.narrative_summary + "\n\n")
+                f.write(timeline.narrative_summary + "\n\n\n")
 
                 if timeline.key_patterns:
                     f.write("## Key Patterns\n\n")
@@ -870,7 +916,9 @@ class TimelineIntegration:
     """Integrates timeline building into the main LCAS workflow"""
 
     def __init__(self, config, ai_service=None):
-        self.timeline_builder = TimelineBuilderPlugin(config, ai_service)
+        self.timeline_builder = TimelineBuilderPlugin()
+        self.timeline_builder.config = config
+        self.timeline_builder.ai_service = ai_service
 
     async def process_timelines(
             self, processed_files: Dict[str, Any], output_dir: Path) -> Dict[str, Timeline]:

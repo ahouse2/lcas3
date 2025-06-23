@@ -41,11 +41,10 @@ class PatternGroupConfig:
 @dataclass
 class Pattern:
     """Represents a discovered pattern"""
-    pattern_id: str = field(default_factory=lambda: str(uuid.uuid4()))
-    # behavioral, financial, temporal, communication, legal_process, etc.
-    pattern_type: str
+    pattern_type: str  # behavioral, financial, temporal, communication, legal_process, etc.
     title: str
     description: str
+    pattern_id: str = field(default_factory=lambda: str(uuid.uuid4()))
     evidence_files: List[str] = field(default_factory=list)
     confidence_score: float = 0.0  # 0.0 to 1.0
     legal_significance: str = ""
@@ -803,143 +802,4 @@ class PatternDiscoveryPlugin:
                 # Check if response is wrapped in markdown json block
                 if content_to_parse.startswith("```json"):
                     content_to_parse = content_to_parse[7:]
-                    if content_to_parse.endswith("```"):
-                        content_to_parse = content_to_parse[:-3]
-
-                # Ensure it's an array
-                if not content_to_parse.startswith(
-                        "[") or not content_to_parse.endswith("]"):
-                    logger.error(
-                        f"AI theory synthesis response is not a JSON array: {content_to_parse}")
-                    return  # Or attempt to wrap it if it's a single object.
-
-                try:
-                    ai_suggested_theories = json.loads(content_to_parse)
-                    for suggested_theory_data in ai_suggested_theories:
-                        if not isinstance(suggested_theory_data, dict):
-                            logger.warning(
-                                f"Skipping non-dict item in AI theories: {suggested_theory_data}")
-                            continue
-                        if 'theory_name' in suggested_theory_data and 'supporting_pattern_ids' in suggested_theory_data:
-                            new_theory = LegalTheory(
-                                theory_name=suggested_theory_data['theory_name'],
-                                description=suggested_theory_data.get(
-                                    'description', ''),
-                                supporting_patterns=suggested_theory_data['supporting_pattern_ids'],
-                                evidence_strength=float(
-                                    suggested_theory_data.get(
-                                        'evidence_strength', 0.5)),
-                                required_evidence_elements=suggested_theory_data.get(
-                                    'required_evidence_elements', []),
-                                strategic_value=suggested_theory_data.get(
-                                    'strategic_value', '')
-                            )
-                            if not any(t.theory_name.strip().lower() == new_theory.theory_name.strip(
-                            ).lower() for t in self.potential_theories):  # Avoid duplicates
-                                self._add_theory(new_theory)
-                except json.JSONDecodeError as e:
-                    logger.error(
-                        f"AI response for theory synthesis was not valid JSON after stripping: {e}. Content: {content_to_parse}")
-        except Exception as e:
-            logger.error(f"Error during AI theory synthesis: {e}")
-
-    def _add_pattern(self, pattern: Pattern):
-        self.discovered_patterns.append(pattern)
-
-    def _add_theory(self, theory: LegalTheory):
-        self.potential_theories.append(theory)
-
-    def save_discovery_report(self, output_dir_path_str: str):
-        output_dir = Path(output_dir_path_str)
-        # Use a more specific subdirectory for these reports
-        report_dir = output_dir / "REPORTS_LCAS" / "PATTERN_DISCOVERY"
-        report_dir.mkdir(parents=True, exist_ok=True)
-
-        patterns_file = report_dir / "discovered_patterns_details.json"
-        theories_file = report_dir / "potential_legal_theories_details.json"
-        summary_report_file = report_dir / "pattern_discovery_summary.md"
-
-        try:
-            with open(patterns_file, 'w', encoding='utf-8') as f:
-                json.dump([asdict(p) for p in self.discovered_patterns],
-                          f, indent=2, ensure_ascii=False)
-            logger.info(f"Discovered patterns saved to {patterns_file}")
-
-            with open(theories_file, 'w', encoding='utf-8') as f:
-                json.dump([asdict(t) for t in self.potential_theories],
-                          f, indent=2, ensure_ascii=False)
-            logger.info(f"Potential legal theories saved to {theories_file}")
-
-            with open(summary_report_file, 'w', encoding='utf-8') as f:
-                f.write(
-                    f"# Pattern Discovery & Legal Theory Summary Report\n\n")
-                f.write(
-                    f"*Report generated on: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}*\n\n")
-                f.write(f"This report summarizes automatically discovered patterns from the provided evidence and suggests potential legal theories or arguments that might be developed.\n\n")
-
-                f.write(
-                    f"## Discovered Patterns Summary ({len(self.discovered_patterns)})\n\n")
-                if not self.discovered_patterns:
-                    f.write(
-                        "No significant patterns were automatically discovered based on the current analysis.\n\n")
-                else:
-                    f.write(
-                        "| Pattern Title                      | Type              | Confidence | Evidence Files (Count) | Key Significance                       |\n")
-                    f.write(
-                        "|------------------------------------|-------------------|------------|------------------------|----------------------------------------|\n")
-                    for p in sorted(self.discovered_patterns, key=lambda x: x.confidence_score, reverse=True)[
-                            :20]:  # Top 20
-                        evidence_count = len(p.evidence_files)
-                        f.write(
-                            f"| {
-                                p.title[
-                                    :35]}{
-                                '...' if len(
-                                    p.title) > 35 else ''} | {
-                                p.pattern_type:<17} | {
-                                p.confidence_score:<10.2f} | {
-                                evidence_count:<22} | {
-                                    p.legal_significance[
-                                        :38]}{
-                                            '...' if len(
-                                                p.legal_significance) > 38 else ''} |\n")
-                    if len(self.discovered_patterns) > 20:
-                        f.write(f"\n*... and {len(self.discovered_patterns) -
-                                              20} more patterns. See discovered_patterns_details.json for full list.*\n")
-                    f.write("\n**Note:** Refer to `discovered_patterns_details.json` for full details on each pattern, including raw matches and AI analysis if applicable.\n\n")
-
-                f.write(
-                    f"## Potential Legal Theories ({len(self.potential_theories)})\n\n")
-                if not self.potential_theories:
-                    f.write("No specific legal theories were automatically synthesized. This may indicate insufficient linked patterns or require manual review of discovered patterns to build arguments.\n\n")
-                else:
-                    f.write(
-                        "| Theory Name                        | Evidence Strength | Supporting Patterns (Count) | Strategic Value Summary                |\n")
-                    f.write(
-                        "|------------------------------------|-------------------|---------------------------|----------------------------------------|\n")
-                    for t in sorted(
-                            self.potential_theories, key=lambda x: x.evidence_strength, reverse=True):
-                        patterns_count = len(t.supporting_patterns)
-                        f.write(
-                            f"| {
-                                t.theory_name[
-                                    :35]}{
-                                '...' if len(
-                                    t.theory_name) > 35 else ''} | {
-                                t.evidence_strength:<17.2f} | {
-                                patterns_count:<25} | {
-                                t.strategic_value[
-                                    :38]}{
-                                        '...' if len(
-                                            t.strategic_value) > 38 else ''} |\n")
-                    f.write("\n**Note:** Refer to `potential_legal_theories_details.json` for full details on each theory, including required evidence elements and implementation steps.\n\n")
-
-                f.write("---\n\n**Disclaimer:** This is an automated analysis. All discovered patterns and suggested theories require careful manual review, verification, and consultation with legal counsel if possible. This tool is for assistance and does not constitute legal advice.\n")
-
-            logger.info(
-                f"Pattern discovery summary report saved to {summary_report_file}")
-
-        except Exception as e:
-            logger.error(
-                f"Error saving pattern discovery report: {e}",
-                exc_info=True)
+                    if content_to_parse.endswith("
