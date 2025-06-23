@@ -216,6 +216,205 @@ class EnhancedOpenAIProvider(ConfigurableAIProvider):
         raise Exception("API call failed after multiple retries.") # Should not be reached if loop is correct
 
 
+class EnhancedAnthropicProvider(ConfigurableAIProvider):
+    """Enhanced Anthropic provider with configurability"""
+
+    def __init__(self, config: SimpleNamespace, user_settings: AIConfigSettings):
+        super().__init__(config, user_settings)
+        self.client = None
+        if ANTHROPIC_AVAILABLE and getattr(self.config, 'api_key', None):
+            try:
+                self.client = anthropic.AsyncAnthropic(api_key=self.config.api_key)
+                logger.debug(f"[AnthropicProvider] Client initialized for model {self.config.model}.")
+            except Exception as e:
+                logger.error(f"[AnthropicProvider] Error initializing client: {e}")
+        else:
+            if not ANTHROPIC_AVAILABLE: logger.warning("[AnthropicProvider] Anthropic SDK not available.")
+            if not getattr(self.config, 'api_key', None): logger.warning("[AnthropicProvider] API key not configured.")
+
+    def is_available(self) -> bool:
+        return bool(self.client and getattr(self.config, 'enabled', False))
+
+    async def analyze_content(self, content: str, analysis_type: str, context: Dict[str, Any] = None) -> Dict[str, Any]:
+        if not self.is_available(): raise ValueError("Anthropic provider not available or not enabled.")
+        logger.info(f"[AnthropicProvider] Analyzing content (type: {analysis_type}), length: {len(content)} chars.")
+
+        # Truncate content if needed
+        if len(content) > self.user_settings.max_content_length:
+            content = content[:self.user_settings.max_content_length] + "\n[Content truncated by provider]"
+            logger.debug(f"[AnthropicProvider] Content truncated to {len(content)} chars.")
+
+        system_prompt = self.get_analysis_prompt(analysis_type, context)
+        if context:
+            context_str = f"Context: {json.dumps(context, indent=2)}\n\n"
+            content = context_str + content
+
+        full_prompt = system_prompt + "\n\nContent to analyze:\n" + content
+        model_to_use = self._select_model()
+        max_tokens_for_call = self._get_max_tokens(analysis_type)
+
+        logger.debug(f"[AnthropicProvider] Making API call. Model: {model_to_use}, MaxTokens: {max_tokens_for_call}")
+        response = await self.client.messages.create(
+            model=model_to_use,
+            max_tokens=max_tokens_for_call,
+            temperature=self._get_temperature(),
+            messages=[{"role": "user", "content": full_prompt}]
+        )
+
+        # Track usage (approximate for Anthropic)
+        tokens_used = len(full_prompt.split()) * 1.3  # Rough estimate
+        cost = tokens_used * 0.00001  # Rough cost estimate
+        self.total_tokens_used += int(tokens_used)
+        self.total_cost += cost
+        self.success_count += 1
+
+        logger.info(f"[AnthropicProvider] Analysis successful. Tokens: {int(tokens_used)}, Cost: ${cost:.5f}")
+        return {
+            "response": response.content[0].text,
+            "tokens_used": int(tokens_used),
+            "cost": cost,
+            "model": model_to_use,
+            "provider": "anthropic",
+            "analysis_type": analysis_type,
+            "success": True
+        }
+
+    def _select_model(self) -> str:
+        if self.user_settings.analysis_depth == "comprehensive":
+            return "claude-3-opus-20240229"
+        elif self.user_settings.analysis_depth == "standard":
+            return getattr(self.config, 'model', "claude-3-sonnet-20240229")
+        else:
+            return "claude-3-haiku-20240307"
+
+    def _get_temperature(self) -> float:
+        return getattr(self.config, 'temperature', 0.1)
+
+    def _get_max_tokens(self, analysis_type: str) -> int:
+        base_tokens = {
+            "document_intelligence": 2000,
+            "legal_analysis": 3000,
+            "pattern_discovery": 2500
+        }
+        base = base_tokens.get(analysis_type, 2000)
+        if self.user_settings.analysis_depth == "comprehensive":
+            return int(base * 1.5)
+        elif self.user_settings.analysis_depth == "basic":
+            return int(base * 0.7)
+        else:
+            return base
+
+
+class EnhancedLocalModelProvider(ConfigurableAIProvider):
+    """Enhanced local model provider with better configurability"""
+
+    def __init__(self, config: SimpleNamespace, user_settings: AIConfigSettings):
+        super().__init__(config, user_settings)
+        self.base_url = getattr(config, 'base_url', "http://localhost:11434")
+        self.available = None  # Cache availability check
+
+    def is_available(self) -> bool:
+        """Check if local model is available (cached)"""
+        if self.available is None:
+            self.available = self._check_availability()
+        return self.available and getattr(self.config, 'enabled', False)
+
+    def _check_availability(self) -> bool:
+        """Actually check if local model server is running"""
+        if not HTTP_AVAILABLE:
+            return False
+        try:
+            response = requests.get(f"{self.base_url}/api/tags", timeout=5)
+            return response.status_code == 200
+        except Exception:
+            return False
+
+    async def analyze_content(self, content: str, analysis_type: str, context: Dict[str, Any] = None) -> Dict[str, Any]:
+        """Enhanced local model analysis"""
+        if not self.is_available():
+            raise ValueError("Local model provider not available")
+
+        logger.info(f"[LocalModelProvider] Analyzing content (type: {analysis_type}), length: {len(content)} chars.")
+
+        # Truncate content if needed
+        if len(content) > self.user_settings.max_content_length:
+            content = content[:self.user_settings.max_content_length] + "\n[Content truncated]"
+
+        system_prompt = self.get_analysis_prompt(analysis_type, context)
+        if context:
+            context_str = f"Context: {json.dumps(context, indent=2)}\n\n"
+            content = context_str + content
+
+        full_prompt = system_prompt + "\n\nContent to analyze:\n" + content
+        model = await self._select_best_model()
+
+        # Make API call
+        async with httpx.AsyncClient(timeout=getattr(self.config, 'timeout', 120)) as client:
+            response = await client.post(
+                f"{self.base_url}/api/generate",
+                json={
+                    "model": model,
+                    "prompt": full_prompt,
+                    "stream": False,
+                    "options": {
+                        "temperature": self._get_temperature(),
+                        "num_predict": self._get_max_tokens(analysis_type)
+                    }
+                }
+            )
+
+            if response.status_code != 200:
+                raise Exception(f"Local model API error: {response.status_code}")
+
+            result = response.json()
+            self.success_count += 1
+
+            return {
+                "response": result.get("response", ""),
+                "tokens_used": 0,  # Local models don't report usage
+                "cost": 0.0,  # No cost for local models
+                "model": model,
+                "provider": "local",
+                "analysis_type": analysis_type,
+                "success": True
+            }
+
+    async def _select_best_model(self) -> str:
+        """Select best available local model"""
+        try:
+            async with httpx.AsyncClient(timeout=5) as client:
+                response = await client.get(f"{self.base_url}/api/tags")
+                if response.status_code == 200:
+                    models = response.json().get("models", [])
+                    model_names = [m.get("name", "") for m in models]
+
+                    # Prefer legal/analysis models if available
+                    preferred_models = ["llama2:13b", "llama2:7b", "mistral:7b", "codellama:13b"]
+
+                    for preferred in preferred_models:
+                        if any(preferred in name for name in model_names):
+                            return preferred
+
+                    # Fall back to any available model
+                    if model_names:
+                        return model_names[0]
+        except Exception:
+            pass
+
+        return getattr(self.config, 'model', "llama2")
+
+    def _get_temperature(self) -> float:
+        return getattr(self.config, 'temperature', 0.1)
+
+    def _get_max_tokens(self, analysis_type: str) -> int:
+        base_tokens = {
+            "document_intelligence": 1000,
+            "legal_analysis": 1500,
+            "pattern_discovery": 1200
+        }
+        return base_tokens.get(analysis_type, 1000)
+
+
 # ... (Similar logging additions for EnhancedAnthropicProvider, EnhancedLocalModelProvider, GoogleAIProvider) ...
 # For brevity, I'll skip pasting their full logging-added versions, but the pattern is similar:
 # - Log at init, is_available, analyze_content entry, API call params, success/failure.

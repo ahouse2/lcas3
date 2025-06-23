@@ -710,6 +710,6 @@ class PatternDiscoveryPlugin:
                 self._add_theory(theory)
 
         # Abuse of Legal Process / Fraud on the Court
-        legal_process_patterns = patterns_by_type.get('legal_processjson"):
+        legal_process_patterns = patterns_by_type.get('legal_process', []):
                     content_to_parse = content_to_parse[7:]
                     if content_to_parse.endswith("

@@ -1,3 +1,21 @@
+"""Adding the AgentResult dataclass as requested."""
+from dataclasses import dataclass
+from typing import Dict, Any, List, Optional
+from abc import ABC, abstractmethod
+import asyncio
+import logging
+
+logger = logging.getLogger(__name__)
+
+@dataclass
+class AgentResult:
+    """Result from an agent's analysis"""
+    agent_name: str
+    success: bool
+    data: Dict[str, Any]
+    metadata: Dict[str, Any]
+    error: Optional[str] = None
+
 """
 Base Agent Class
 Provides common functionality for all specialized agents
