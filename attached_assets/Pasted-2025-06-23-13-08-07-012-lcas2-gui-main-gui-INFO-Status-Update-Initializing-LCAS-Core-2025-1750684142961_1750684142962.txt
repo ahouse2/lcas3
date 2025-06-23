@@ -1,0 +1,124 @@
+2025-06-23 13:08:07,012 - lcas2.gui.main_gui - INFO - Status Update: Initializing LCAS Core...
+2025-06-23 13:08:07,015 - lcas2.core.core - INFO - Initializing LCASCore. Project Root: /home/runner/workspace
+2025-06-23 13:08:07,015 - lcas2.core.core - INFO - Using Target Directory: /home/runner/workspace/F:/6-21-25_target_2
+2025-06-23 13:08:07,016 - lcas2.core.core.PluginManager - INFO - Discovering plugins in: /home/runner/workspace/lcas2/plugins
+2025-06-23 13:08:09,076 - ai_integration_plugin - INFO - [AI Integration Services] Initializing. Project Root: /home/runner/workspace
+2025-06-23 13:08:09,079 - lcas2.plugins.ai_integration_plugin - INFO - [Factory] Creating AiIntegrationOrchestrator. Config: 'config/ai_config.json', Root: '/home/runner/workspace'
+2025-06-23 13:08:09,079 - lcas2.plugins.ai_integration_plugin - INFO - [Orchestrator] Initializing with config path: config/ai_config.json
+2025-06-23 13:08:09,079 - lcas2.plugins.ai_integration_plugin - INFO - [Orchestrator] Attempting to load AI config from: /home/runner/workspace/config/ai_config.json
+2025-06-23 13:08:09,079 - lcas2.plugins.ai_integration_plugin - INFO - [Orchestrator] Successfully loaded AI config. Preferred provider: openai
+2025-06-23 13:08:09,079 - lcas2.plugins.ai_integration_plugin - INFO - [Orchestrator] Initializing providers. Found 3 provider configs.
+2025-06-23 13:08:09,079 - lcas2.plugins.ai_integration_plugin - DEBUG - [Orchestrator] Initializing provider 'openai' with config: {'enabled': True, 'api_key': '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', 'model': 'gpt-4o-mini', 'temperature': 0.1, 'max_tokens': 4000, 'rate_limit_requests_per_minute': 60, 'rate_limit_tokens_per_minute': 150000, 'provider_name': 'openai'}
+2025-06-23 13:08:09,079 - lcas2.plugins.ai_integration_plugin - DEBUG - Provider 'openai' initialized with model 'gpt-4o-mini'.
+2025-06-23 13:08:09,183 - lcas2.plugins.ai_integration_plugin - DEBUG - [OpenAIProvider] Client initialized for model gpt-4o-mini.
+2025-06-23 13:08:09,183 - lcas2.plugins.ai_integration_plugin - INFO - [Orchestrator] Provider 'openai' initialized and available.
+2025-06-23 13:08:09,183 - lcas2.plugins.ai_integration_plugin - DEBUG - [Orchestrator] Initializing provider 'anthropic' with config: {'enabled': False, 'api_key': '', 'model': 'claude-3-sonnet-20240229', 'temperature': 0.1, 'max_tokens': 4000, 'rate_limit_requests_per_minute': 50, 'rate_limit_tokens_per_minute': 100000, 'provider_name': 'anthropic'}
+2025-06-23 13:08:09,183 - lcas2.plugins.ai_integration_plugin - WARNING - [Orchestrator] Unknown provider type configured: anthropic
+2025-06-23 13:08:09,183 - lcas2.plugins.ai_integration_plugin - DEBUG - [Orchestrator] Initializing provider 'local' with config: {'enabled': True, 'endpoint': 'http://localhost:11434/v1/', 'model': 'llama3.2:latest', 'temperature': 0.1, 'max_tokens': 4000, 'provider_name': 'local'}
+2025-06-23 13:08:09,183 - lcas2.plugins.ai_integration_plugin - WARNING - [Orchestrator] Unknown provider type configured: local
+2025-06-23 13:08:09,183 - lcas2.plugins.ai_integration_plugin - INFO - [Orchestrator] Finished initializing providers. 1 actual providers instantiated.
+2025-06-23 13:08:09,184 - lcas2.plugins.ai_integration_plugin - INFO - [Orchestrator] Initializing agents. Found 0 agent configs.
+2025-06-23 13:08:09,184 - lcas2.plugins.ai_integration_plugin - INFO - [Orchestrator] Finished initializing agents. 0 agents active.
+2025-06-23 13:08:09,184 - ai_integration_plugin - INFO - [AI Integration Services] AiIntegrationOrchestrator created via factory.
+2025-06-23 13:08:09,184 - lcas2.core.core.PluginManager - INFO - Successfully loaded and initialized plugin: AI Integration Services (from ai_integration_plugin)
+2025-06-23 13:08:09,184 - lcas2.core.core.PluginManager - INFO - Priority plugin loaded: ai_integration_plugin
+2025-06-23 13:08:09,185 - lcas_ai_wrapper_plugin - INFO - [lcas_ai_wrapper_plugin] Initializing...
+2025-06-23 13:08:09,186 - lcas_ai_wrapper_plugin - WARNING - [lcas_ai_wrapper_plugin] AiIntegrationOrchestrator not found via plugin. Attempting direct creation.
+2025-06-23 13:08:09,186 - lcas2.plugins.ai_integration_plugin - INFO - [Orchestrator] Initializing with config path: config/ai_config.json
+2025-06-23 13:08:09,186 - lcas2.plugins.ai_integration_plugin - INFO - [Orchestrator] Attempting to load AI config from: /home/runner/workspace/config/ai_config.json
+2025-06-23 13:08:09,186 - lcas2.plugins.ai_integration_plugin - INFO - [Orchestrator] Successfully loaded AI config. Preferred provider: openai
+2025-06-23 13:08:09,186 - lcas2.plugins.ai_integration_plugin - INFO - [Orchestrator] Initializing providers. Found 3 provider configs.
+2025-06-23 13:08:09,186 - lcas2.plugins.ai_integration_plugin - DEBUG - [Orchestrator] Initializing provider 'openai' with config: {'enabled': True, 'api_key': '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', 'model': 'gpt-4o-mini', 'temperature': 0.1, 'max_tokens': 4000, 'rate_limit_requests_per_minute': 60, 'rate_limit_tokens_per_minute': 150000, 'provider_name': 'openai'}
+2025-06-23 13:08:09,186 - lcas2.plugins.ai_integration_plugin - DEBUG - Provider 'openai' initialized with model 'gpt-4o-mini'.
+2025-06-23 13:08:09,194 - lcas2.plugins.ai_integration_plugin - DEBUG - [OpenAIProvider] Client initialized for model gpt-4o-mini.
+2025-06-23 13:08:09,194 - lcas2.plugins.ai_integration_plugin - INFO - [Orchestrator] Provider 'openai' initialized and available.
+2025-06-23 13:08:09,194 - lcas2.plugins.ai_integration_plugin - DEBUG - [Orchestrator] Initializing provider 'anthropic' with config: {'enabled': False, 'api_key': '', 'model': 'claude-3-sonnet-20240229', 'temperature': 0.1, 'max_tokens': 4000, 'rate_limit_requests_per_minute': 50, 'rate_limit_tokens_per_minute': 100000, 'provider_name': 'anthropic'}
+2025-06-23 13:08:09,194 - lcas2.plugins.ai_integration_plugin - WARNING - [Orchestrator] Unknown provider type configured: anthropic
+2025-06-23 13:08:09,194 - lcas2.plugins.ai_integration_plugin - DEBUG - [Orchestrator] Initializing provider 'local' with config: {'enabled': True, 'endpoint': 'http://localhost:11434/v1/', 'model': 'llama3.2:latest', 'temperature': 0.1, 'max_tokens': 4000, 'provider_name': 'local'}
+2025-06-23 13:08:09,194 - lcas2.plugins.ai_integration_plugin - WARNING - [Orchestrator] Unknown provider type configured: local
+2025-06-23 13:08:09,194 - lcas2.plugins.ai_integration_plugin - INFO - [Orchestrator] Finished initializing providers. 1 actual providers instantiated.
+2025-06-23 13:08:09,194 - lcas2.plugins.ai_integration_plugin - INFO - [Orchestrator] Initializing agents. Found 0 agent configs.
+2025-06-23 13:08:09,195 - lcas2.plugins.ai_integration_plugin - INFO - [Orchestrator] Finished initializing agents. 0 agents active.
+2025-06-23 13:08:09,195 - lcas_ai_wrapper_plugin - INFO - [lcas_ai_wrapper_plugin] Directly created AiIntegrationOrchestrator.
+2025-06-23 13:08:09,195 - lcas_ai_wrapper_plugin - WARNING - [lcas_ai_wrapper_plugin] No AI providers seem to be available/configured via orchestrator. Check 'config/ai_config.json'.
+2025-06-23 13:08:09,195 - lcas_ai_wrapper_plugin - INFO - [lcas_ai_wrapper_plugin] Initialized successfully.
+2025-06-23 13:08:09,195 - lcas2.core.core.PluginManager - INFO - Successfully loaded and initialized plugin: lcas_ai_wrapper_plugin (from lcas_ai_wrapper_plugin)
+2025-06-23 13:08:09,195 - lcas2.core.core.PluginManager - INFO - Priority plugin loaded: lcas_ai_wrapper_plugin
+2025-06-23 13:08:09,205 - lcas2.core.core.PluginManager - ERROR - Error loading plugin ai_foundation_plugin: invalid syntax (ai_foundation_plugin.py, line 817)
+Traceback (most recent call last):
+  File "/home/runner/workspace/lcas2/core/core.py", line 171, in load_plugin
+    module = importlib.import_module(plugin_name_stem) # Use stem for import
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/nix/store/nb21sc3npfc8gvazwnrjxpvb5d48jysx-python3-3.12.7/lib/python3.12/importlib/__init__.py", line 90, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 991, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 1129, in get_code
+  File "<frozen importlib._bootstrap_external>", line 1059, in source_to_code
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "/home/runner/workspace/lcas2/plugins/ai_foundation_plugin.py", line 817
+    ```
+    ^
+SyntaxError: invalid syntax
+2025-06-23 13:08:09,208 - lcas2.core.core.PluginManager - ERROR - Plugin module enhanced_ai_plugin has no recognizable plugin class. Tried: ['EnhancedAiPlugin']
+2025-06-23 13:08:09,209 - lcas2.core.core.PluginManager - ERROR - Plugin module enhanced_ai_plugin has no recognizable plugin class. Tried: ['EnhancedAiPlugin']
+2025-06-23 13:08:09,209 - lcas2.core.core.PluginManager - INFO - Successfully loaded and initialized plugin: Evidence Categorization (from evidence_categorization_plugin)
+2025-06-23 13:08:09,210 - lcas2.core.core.PluginManager - INFO - Successfully loaded and initialized plugin: File Ingestion (from file_ingestion_plugin)
+2025-06-23 13:08:09,210 - lcas2.core.core.PluginManager - INFO - Successfully loaded and initialized plugin: Hash Generation (from hash_generation_plugin)
+2025-06-23 13:08:09,211 - lcas2.core.core.PluginManager - INFO - Successfully loaded and initialized plugin: Pattern Discovery (from pattern_discovery_plugin)
+2025-06-23 13:08:09,212 - lcas2.core.core.PluginManager - INFO - Successfully loaded and initialized plugin: Report Generation (from report_generation_plugin)
+2025-06-23 13:08:09,229 - multi_agent_analysis_plugin - INFO - Multi-Agent Analysis: Initializing multi-agent system...
+2025-06-23 13:08:09,229 - multi_agent_analysis_plugin - INFO - Multi-Agent Analysis: Using AI orchestrator from lcas_ai_wrapper_plugin
+2025-06-23 13:08:09,229 - multi_agent_analysis_plugin - INFO - Multi-Agent Analysis: Initialized with 6 agents
+2025-06-23 13:08:09,230 - multi_agent_analysis_plugin - INFO -   - DocumentIntelligence: 5 capabilities
+2025-06-23 13:08:09,230 - multi_agent_analysis_plugin - INFO -   - EvidenceAnalyst: 7 capabilities
+2025-06-23 13:08:09,230 - multi_agent_analysis_plugin - INFO -   - LegalSpecialist: 8 capabilities
+2025-06-23 13:08:09,230 - multi_agent_analysis_plugin - INFO -   - Timeline: 7 capabilities
+2025-06-23 13:08:09,230 - multi_agent_analysis_plugin - INFO -   - PatternDiscovery: 7 capabilities
+2025-06-23 13:08:09,230 - multi_agent_analysis_plugin - INFO -   - CaseStrategist: 8 capabilities
+2025-06-23 13:08:09,230 - lcas2.core.core.PluginManager - INFO - Successfully loaded and initialized plugin: Multi-Agent Analysis (from multi_agent_analysis_plugin)
+2025-06-23 13:08:09,232 - lcas2.core.core.PluginManager - INFO - Successfully loaded and initialized plugin: Timeline Analysis (from timeline_analysis_plugin)
+2025-06-23 13:08:09,236 - lcas2.core.core.PluginManager - INFO - Successfully loaded and initialized plugin: Timeline Builder (from timeline_builder_plugin)
+2025-06-23 13:08:09,246 - lcas2.core.core.PluginManager - ERROR - Error loading plugin advanced_pattern_discovery_plugin: expected an indented block after 'if' statement on line 805 (advanced_pattern_discovery_plugin.py, line 807)
+Traceback (most recent call last):
+  File "/home/runner/workspace/lcas2/core/core.py", line 171, in load_plugin
+    module = importlib.import_module(plugin_name_stem) # Use stem for import
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/nix/store/nb21sc3npfc8gvazwnrjxpvb5d48jysx-python3-3.12.7/lib/python3.12/importlib/__init__.py", line 90, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 991, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 1129, in get_code
+  File "<frozen importlib._bootstrap_external>", line 1059, in source_to_code
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "/home/runner/workspace/lcas2/plugins/advanced_pattern_discovery_plugin.py", line 807
+    content_to_parse = content_to_parse[:-3].strip()
+IndentationError: expected an indented block after 'if' statement on line 805
+2025-06-23 13:08:09,257 - lcas2.core.core.PluginManager - ERROR - Error loading plugin ai_foundation_plugin: invalid syntax (ai_foundation_plugin.py, line 817)
+Traceback (most recent call last):
+  File "/home/runner/workspace/lcas2/core/core.py", line 171, in load_plugin
+    module = importlib.import_module(plugin_name_stem) # Use stem for import
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/nix/store/nb21sc3npfc8gvazwnrjxpvb5d48jysx-python3-3.12.7/lib/python3.12/importlib/__init__.py", line 90, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1387, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 991, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 1129, in get_code
+  File "<frozen importlib._bootstrap_external>", line 1059, in source_to_code
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "/home/runner/workspace/lcas2/plugins/ai_foundation_plugin.py", line 817
+    ```
+    ^
+SyntaxError: invalid syntax
