@@ -803,3 +803,5 @@ class PatternDiscoveryPlugin:
                 if content_to_parse.startswith("```json"):
                     content_to_parse = content_to_parse[7:]
                     if content_to_parse.endswith("```"):
+        # Remove the trailing markdown code block marker
+        content_to_parse = content_to_parse[:-3].strip()

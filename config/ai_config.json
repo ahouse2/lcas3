@@ -3,7 +3,7 @@
     "openai": {
       "enabled": true,
       "api_key": "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",
-      "model": "gpt-4",
+      "model": "gpt-4o-mini",
       "temperature": 0.1,
       "max_tokens": 4000,
       "rate_limit_requests_per_minute": 60,

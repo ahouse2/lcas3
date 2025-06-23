@@ -472,7 +472,7 @@ class AiIntegrationPlugin(AnalysisPlugin):
         self._core_app = core_app
         logger.info(f"[{self.name}] Initializing. Project Root: {core_app.project_root}")
         try:
-            from .ai_integration_plugin import create_enhanced_ai_plugin as factory_create_orchestrator
+            from lcas2.plugins.ai_integration_plugin import create_enhanced_ai_plugin as factory_create_orchestrator
             self._orchestrator = factory_create_orchestrator(lcas_core_instance=core_app)
             logger.info(f"[{self.name}] AiIntegrationOrchestrator created via factory.")
             return True
