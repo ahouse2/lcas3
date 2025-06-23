@@ -45,16 +45,29 @@ class LcasAiWrapperPlugin(AnalysisPlugin):
         self.lcas_core = core_app
         logger.info(f"[{self.name}] Initializing...")
         try:
-            ai_integration_services_plugin = self.lcas_core.plugin_manager.loaded_plugins.get("AI Integration Services")
-            if ai_integration_services_plugin and hasattr(ai_integration_services_plugin, 'get_integration_orchestrator'):
-                self.ai_orchestrator = ai_integration_services_plugin.get_integration_orchestrator()
-                logger.info(f"[{self.name}] Obtained AiIntegrationOrchestrator from 'AI Integration Services' plugin.")
+            # First, try to get the AI Integration Orchestrator from an already loaded plugin
+            ai_integration_plugin_names = ["AI Integration Services", "Enhanced AI Foundation", "ai_integration_plugin", "AI Integration"]
+            for plugin_name in ai_integration_plugin_names:
+                loaded_ai_plugin = core_app.plugin_manager.loaded_plugins.get(plugin_name)
+                if loaded_ai_plugin and hasattr(loaded_ai_plugin, 'ai_orchestrator'):
+                    self.ai_orchestrator = loaded_ai_plugin.ai_orchestrator
+                    logger.info(f"[{self.name}] Found AiIntegrationOrchestrator via plugin '{plugin_name}'.")
+                    break
 
+            # If not found, try direct import and creation
             if not self.ai_orchestrator:
-                 logger.warning(f"[{self.name}] AiIntegrationOrchestrator not found via 'AI Integration Services' plugin. Attempting direct creation.")
-                 from lcas2.plugins.ai_integration_plugin import create_enhanced_ai_plugin as create_ai_integration_orchestrator
-                 self.ai_orchestrator = create_ai_integration_orchestrator(lcas_core_instance=core_app)
-                 logger.info(f"[{self.name}] Directly created AiIntegrationOrchestrator.")
+                logger.warning(f"[{self.name}] AiIntegrationOrchestrator not found via plugin. Attempting direct creation.")
+                try:
+                    from lcas2.plugins.ai_integration_plugin import AiIntegrationOrchestrator
+                    # Use the project root from core_app for proper path resolution
+                    self.ai_orchestrator = AiIntegrationOrchestrator(
+                        config_path="config/ai_config.json",
+                        project_root=core_app.project_root
+                    )
+                    logger.info(f"[{self.name}] Directly created AiIntegrationOrchestrator.")
+                except ImportError as ie:
+                    logger.error(f"[{self.name}] Could not import AiIntegrationOrchestrator: {ie}")
+                    return False
 
             if not self.ai_orchestrator or not self.ai_orchestrator.config:
                 logger.error(f"[{self.name}] Failed to obtain or initialize AI Integration Orchestrator or its configuration.")

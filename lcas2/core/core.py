@@ -169,15 +169,46 @@ class PluginManager:
 
         try:
             module = importlib.import_module(plugin_name_stem) # Use stem for import
-            # Correct class name generation to handle single-word plugin stems correctly
-            # e.g. timeline_plugin -> TimelinePlugin, ai_wrapper_plugin -> AiWrapperPlugin
+            
+            # Try multiple class name patterns to find the right plugin class
+            possible_class_names = []
+            
+            # Pattern 1: Standard conversion (timeline_plugin -> TimelinePlugin)
             class_name_parts = plugin_name_stem.replace("_plugin","").split("_")
             cls_name = "".join(p.capitalize() for p in class_name_parts) + "Plugin"
+            possible_class_names.append(cls_name)
+            
+            # Pattern 2: Special cases for known plugins
+            if plugin_name_stem == "lcas_ai_wrapper_plugin":
+                possible_class_names.extend(["LcasAiWrapperPlugin", "LCASAiWrapperPlugin"])
+            elif plugin_name_stem == "ai_integration_plugin":
+                possible_class_names.extend(["AiIntegrationPlugin", "AIIntegrationPlugin"])
+            elif plugin_name_stem == "multi_agent_analysis_plugin":
+                possible_class_names.extend(["MultiAgentAnalysisPlugin"])
+            
+            # Pattern 3: Try finding any class that inherits from PluginInterface
+            plugin_class = None
+            for name in possible_class_names:
+                if hasattr(module, name):
+                    plugin_class = getattr(module, name)
+                    break
+            
+            # Pattern 4: If no match found, search for any PluginInterface subclass
+            if not plugin_class:
+                for attr_name in dir(module):
+                    attr = getattr(module, attr_name)
+                    if (isinstance(attr, type) and 
+                        hasattr(attr, '__bases__') and 
+                        any('PluginInterface' in str(base) for base in attr.__mro__)):
+                        plugin_class = attr
+                        self.logger.info(f"Found plugin class {attr_name} via interface search")
+                        break
 
-            if not hasattr(module, cls_name):
-                self.logger.error(f"Plugin module {plugin_name_stem} has no class {cls_name}"); return False
+            if not plugin_class:
+                self.logger.error(f"Plugin module {plugin_name_stem} has no recognizable plugin class. Tried: {possible_class_names}")
+                return False
 
-            plugin_instance = getattr(module, cls_name)()
+            plugin_instance = plugin_class()
 
             # Use plugin_instance.name (from @property) as the key for loaded_plugins
             actual_plugin_name = plugin_instance.name
@@ -194,35 +225,30 @@ class PluginManager:
 
     async def load_all_plugins(self, enabled_plugin_names: List[str]):
         discovered_stems = self.discover_plugins()
+        
+        # Sort plugins to load AI-related plugins first
+        priority_plugins = [
+            "ai_integration_plugin",
+            "lcas_ai_wrapper_plugin", 
+            "ai_foundation_plugin",
+            "enhanced_ai_plugin"
+        ]
+        
+        # Load priority plugins first
+        loaded_stems = set()
+        for priority_plugin in priority_plugins:
+            if priority_plugin in discovered_stems:
+                if await self.load_plugin(priority_plugin):
+                    loaded_stems.add(priority_plugin)
+                    self.logger.info(f"Priority plugin loaded: {priority_plugin}")
+        
+        # Load remaining plugins
         for plugin_stem in discovered_stems:
-            # Check if this plugin (identified by its stem) should be loaded based on enabled_plugins list
-            # This requires matching stem to the plugin's actual name (property) or having a mapping.
-            # For now, we load then check its name.
-            # A better approach might be to have plugin metadata files or a naming convention.
-
-            # Peek at class name to guess plugin actual name for enabled check
-            # This is a bit fragile, relies on consistent naming.
-            # temp_class_name_for_check = "".join(p.capitalize() for p in plugin_stem.replace("_plugin","").split("_")) + "Plugin"
-            # This is a temporary check. A plugin should ideally have a static method or metadata to get its name before full load.
-            # For now, we proceed to load and then check against enabled_plugins.
-            # This means plugins not in 'enabled_plugins' are still loaded and initialized, then potentially ignored by pipeline.
-
-            if await self.load_plugin(plugin_stem):
-                # After loading, check if its actual name is in enabled_plugin_names
-                # This part is tricky as load_plugin already adds to self.loaded_plugins
-                # We need to find the plugin that was just loaded.
-                # Assuming plugin_stem is unique enough to find the module and then its class.
-                # This is a simplified approach.
-
-                # Find the plugin instance that was just added (its key is actual_plugin_name)
-                # This logic needs refinement; currently, it might pick up an unrelated plugin if names are not carefully managed.
-                # A better way: load_plugin could return the instance or its actual name.
-                # For now, this will rely on the fact that load_plugin adds it.
-
-                # The check against enabled_plugin_names should ideally happen *before* full initialization
-                # or plugins not in the list should be explicitly unloaded if not desired.
-                # Current logic: loads all discoverable, then pipeline uses enabled_plugins list.
-                pass
+            if plugin_stem not in loaded_stems:
+                if await self.load_plugin(plugin_stem):
+                    loaded_stems.add(plugin_stem)
+        
+        self.logger.info(f"Loaded {len(self.loaded_plugins)} plugins: {list(self.loaded_plugins.keys())}")
 
 
     def get_plugins_by_type(self, plugin_type: Type[PluginInterface]) -> List[PluginInterface]:

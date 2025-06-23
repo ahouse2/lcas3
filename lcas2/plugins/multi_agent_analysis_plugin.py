@@ -49,9 +49,10 @@ class MultiAgentAnalysisPlugin(AnalysisPlugin):
             ai_plugin_names = [
                 "lcas_ai_wrapper_plugin", 
                 "AI Integration",
-                "Enhanced AI Foundation"
+                "Enhanced AI Foundation",
+                "AI Integration Services"
             ]
-            
+
             for plugin_name in ai_plugin_names:
                 if plugin_name in core_app.plugin_manager.loaded_plugins:
                     ai_plugin = core_app.plugin_manager.loaded_plugins[plugin_name]
@@ -62,6 +63,10 @@ class MultiAgentAnalysisPlugin(AnalysisPlugin):
                     elif hasattr(ai_plugin, 'ai_foundation'):
                         ai_service = ai_plugin.ai_foundation
                         logger.info(f"{self.name}: Using AI foundation from {plugin_name}")
+                        break
+                    elif hasattr(ai_plugin, 'ai_orchestrator'):
+                        ai_service = ai_plugin.ai_orchestrator
+                        logger.info(f"{self.name}: Using AI orchestrator from {plugin_name}")
                         break
             
             if not ai_service:
