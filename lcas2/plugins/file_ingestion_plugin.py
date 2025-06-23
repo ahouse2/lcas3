@@ -76,7 +76,8 @@ class FileIngestionPlugin(AnalysisPlugin, UIPlugin):
             "files_processed": files_processed,
             "files_copied": files_copied,
             "backup_directory": str(backup_dir),
-            "status": "completed"
+            "status": "completed",
+            "success": True
         }
 
     def create_ui_elements(self, parent_widget) -> List[tk.Widget]:

@@ -741,8 +741,14 @@ class LCASMainGUI(ctk.CTk):
     def _start_file_preservation(self):
         if not self.core_app or not self.core_app.running:
             messagebox.showerror("Error", "LCAS Core is not running or initialized."); return
-        if not self.core_app.config.source_directory or not self.core_app.config.target_directory:
-            messagebox.showerror("Configuration Error", "Source and Target directories must be set."); return
+        
+        # Auto-save current config before processing
+        self.save_app_config()
+        
+        if not self.core_app.config.source_directory or not Path(self.core_app.config.source_directory).exists():
+            messagebox.showerror("Configuration Error", "Source directory must be set and must exist."); return
+        if not self.core_app.config.target_directory:
+            messagebox.showerror("Configuration Error", "Target directory must be set."); return
 
         # Check if plugins are loaded
         if not self.core_app.plugin_manager.loaded_plugins:
@@ -769,8 +775,14 @@ class LCASMainGUI(ctk.CTk):
     def _start_full_analysis(self):
         if not self.core_app or not self.core_app.running:
             messagebox.showerror("Error", "LCAS Core is not running or initialized."); return
-        if not self.core_app.config.source_directory or not self.core_app.config.target_directory:
-            messagebox.showerror("Configuration Error", "Source and Target directories must be set."); return
+        
+        # Auto-save current config before processing
+        self.save_app_config()
+        
+        if not self.core_app.config.source_directory or not Path(self.core_app.config.source_directory).exists():
+            messagebox.showerror("Configuration Error", "Source directory must be set and must exist."); return
+        if not self.core_app.config.target_directory:
+            messagebox.showerror("Configuration Error", "Target directory must be set."); return
 
         # Check if plugins are loaded
         if not self.core_app.plugin_manager.loaded_plugins:
@@ -798,12 +810,21 @@ class LCASMainGUI(ctk.CTk):
     def _gui_progress_callback(self, plugin_name: str, status: str, percentage: int):
         # This method is called from LCASCore via main_loop.call_soon_threadsafe
         # So it runs in the GUI thread.
-        self.analysis_progress_bar.set(float(percentage) / 100.0)
-        self.current_task_label.configure(text=f"Current Task: {plugin_name} - {status} ({percentage}%)")
-        if status == "error":
-            logger.error(f"Progress callback reported error for {plugin_name}")
-        elif status == "completed" and percentage == 100:
-             logger.info(f"Progress callback reported completion for {plugin_name}")
+        try:
+            self.analysis_progress_bar.set(float(percentage) / 100.0)
+            self.current_task_label.configure(text=f"Current Task: {plugin_name} - {status} ({percentage}%)")
+            
+            # Update the analysis log display
+            log_message = f"[{datetime.now().strftime('%H:%M:%S')}] {plugin_name}: {status} ({percentage}%)"
+            self.analysis_log_display.insert(tk.END, log_message + "\n")
+            self.analysis_log_display.see(tk.END)
+            
+            if status == "error":
+                logger.error(f"Progress callback reported error for {plugin_name}")
+            elif status == "completed" and percentage == 100:
+                logger.info(f"Progress callback reported completion for {plugin_name}")
+        except Exception as e:
+            logger.error(f"Error in progress callback: {e}")
 
 
     def _on_closing(self):

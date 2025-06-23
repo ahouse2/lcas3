@@ -225,12 +225,15 @@ class PluginManager:
 
     async def load_all_plugins(self, enabled_plugin_names: List[str]):
         discovered_stems = self.discover_plugins()
+        self.logger.info(f"Discovered plugin files: {discovered_stems}")
         
-        # Sort plugins to load AI-related plugins first
+        # Sort plugins to load core plugins first, then AI plugins
         priority_plugins = [
-            "ai_integration_plugin",
-            "lcas_ai_wrapper_plugin", 
+            "file_ingestion_plugin",
+            "hash_generation_plugin", 
             "ai_foundation_plugin",
+            "ai_integration_plugin",
+            "lcas_ai_wrapper_plugin",
             "enhanced_ai_plugin"
         ]
         
@@ -238,17 +241,26 @@ class PluginManager:
         loaded_stems = set()
         for priority_plugin in priority_plugins:
             if priority_plugin in discovered_stems:
+                self.logger.info(f"Attempting to load priority plugin: {priority_plugin}")
                 if await self.load_plugin(priority_plugin):
                     loaded_stems.add(priority_plugin)
-                    self.logger.info(f"Priority plugin loaded: {priority_plugin}")
+                    self.logger.info(f"Priority plugin loaded successfully: {priority_plugin}")
+                else:
+                    self.logger.warning(f"Failed to load priority plugin: {priority_plugin}")
         
         # Load remaining plugins
         for plugin_stem in discovered_stems:
             if plugin_stem not in loaded_stems:
+                self.logger.info(f"Attempting to load plugin: {plugin_stem}")
                 if await self.load_plugin(plugin_stem):
                     loaded_stems.add(plugin_stem)
+                    self.logger.info(f"Plugin loaded successfully: {plugin_stem}")
+                else:
+                    self.logger.warning(f"Failed to load plugin: {plugin_stem}")
         
-        self.logger.info(f"Loaded {len(self.loaded_plugins)} plugins: {list(self.loaded_plugins.keys())}")
+        self.logger.info(f"Total loaded plugins: {len(self.loaded_plugins)}")
+        self.logger.info(f"Plugin names: {list(self.loaded_plugins.keys())}")
+        self.logger.info(f"Enabled plugins from config: {enabled_plugin_names}")
 
 
     def get_plugins_by_type(self, plugin_type: Type[PluginInterface]) -> List[PluginInterface]:
@@ -335,8 +347,19 @@ class LCASCore:
 
     async def run_file_preservation(self, progress_callback: Optional[Callable] = None) -> Dict[str, Any]:
         self.logger.info("Starting file preservation process...")
+        await self.event_bus.publish("core.preservation_started")
+        
         plugin = self.plugin_manager.loaded_plugins.get(self.config.file_ingestion_plugin_name)
-        if plugin and isinstance(plugin, AnalysisPlugin) and plugin.name in self.config.enabled_plugins:
+        self.logger.info(f"Looking for plugin: {self.config.file_ingestion_plugin_name}")
+        self.logger.info(f"Available plugins: {list(self.plugin_manager.loaded_plugins.keys())}")
+        
+        if plugin and isinstance(plugin, AnalysisPlugin):
+            if progress_callback:
+                if self.main_loop and self.main_loop.is_running():
+                    self.main_loop.call_soon_threadsafe(progress_callback, plugin.name, "started", 0)
+                else:
+                    progress_callback(plugin.name, "started", 0)
+            
             try:
                 ingestion_input = {
                     "source_directory": self.config.source_directory,
@@ -344,21 +367,33 @@ class LCASCore:
                     "case_name": self.config.case_name,
                     "config_options": {"copy_files": True, "verify_hashes": True}
                 }
+                self.logger.info(f"Calling analyze on {plugin.name} with input: {ingestion_input}")
                 result = await plugin.analyze(ingestion_input)
+                self.logger.info(f"File preservation result: {result}")
                 self.set_analysis_result(plugin.name, result)
 
-                if result.get("success") and isinstance(result.get("files_details"), list):
-                    for item_detail_dict in result.get("files_details", []):
-                        if isinstance(item_detail_dict, dict) and item_detail_dict.get("original_path"):
-                            # Assuming item_detail_dict structure matches FileIngestionDetail fields
-                            fad = FileAnalysisData(file_path=item_detail_dict["original_path"])
-                            fad.ingestion_details = item_detail_dict # This should ideally be FileIngestionDetail(**item_detail_dict)
-                            fad.size_bytes = item_detail_dict.get("size")
-                            if not fad.file_name: fad.file_name = Path(fad.file_path).name
-                            self.master_processed_files[fad.file_path] = fad
-                    self.logger.info(f"File preservation successful. {len(result.get('files_details',[]))} files processed into master_processed_files.")
-                elif not result.get("success"): self.logger.error(f"File Ingestion plugin reported failure: {result.get('error', 'Unknown error')}")
-                else: self.logger.warning("File Ingestion plugin result format unexpected or no files_details.")
+                if progress_callback:
+                    if self.main_loop and self.main_loop.is_running():
+                        self.main_loop.call_soon_threadsafe(progress_callback, plugin.name, "completed", 100)
+                    else:
+                        progress_callback(plugin.name, "completed", 100)
+                
+                if result.get("success") or result.get("status") == "completed":
+                    files_copied = result.get("files_copied", 0)
+                    self.logger.info(f"File preservation successful. {files_copied} files copied.")
+                    
+                    # Create FileAnalysisData entries for preserved files
+                    source_path = Path(self.config.source_directory)
+                    if source_path.exists():
+                        for file_path in source_path.rglob("*"):
+                            if file_path.is_file():
+                                fad = FileAnalysisData(file_path=str(file_path))
+                                fad.file_name = file_path.name
+                                fad.size_bytes = file_path.stat().st_size
+                                self.master_processed_files[str(file_path)] = fad
+                        self.logger.info(f"Created {len(self.master_processed_files)} FileAnalysisData entries.")
+                
+                await self.event_bus.publish("core.preservation_completed", {plugin.name: result})
                 return result
             except Exception as e:
                 self.logger.error(f"Error running File Ingestion plugin: {e}", exc_info=True)
